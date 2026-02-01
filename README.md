@@ -1,11 +1,11 @@
 # ChatGPT Page Summarizer Sidebar
 
-This Chrome extension adds a single button to the browser’s side panel that lets you quickly generate a summary of the current page using ChatGPT.  It is inspired by existing side‑panel integrations for ChatGPT (for example, the open source [ChatGPT Panel Chrome Extension](https://github.com/PeterPorzuczek/chatgpt-panel-chrome-extension))【372478001218400†L287-L295】 but is purpose‑built for summarisation rather than exposing the full chat interface.  Instead of embedding the ChatGPT UI in the panel—which is often blocked by the site’s security headers—this extension keeps a pinned ChatGPT tab in the background and writes a prompt into its input box when requested.
+This Chrome extension adds a single button to the browser’s side panel that lets you quickly generate a summary of the current page using ChatGPT.  It is inspired by existing side‑panel integrations for ChatGPT (for example, the open source [ChatGPT Panel Chrome Extension](https://github.com/PeterPorzuczek/chatgpt-panel-chrome-extension)) but is purpose‑built for summarisation rather than exposing the full chat interface.  Instead of embedding the ChatGPT UI in the panel—which is often blocked by the site’s security headers—this extension keeps a pinned ChatGPT tab in the background and writes a prompt into its input box when requested.
 
 ## Features
 
 * **Side panel integration.**  The extension registers a side panel where you can click a single button to summarise the current page.
-* **Pinned ChatGPT tab.**  A pinned tab (on `chat.openai.com`) is created or reused to send prompts.  This avoids the need to embed ChatGPT directly in the panel, which would violate the site’s `X‑Frame‑Options` and content‑security‑policy restrictions【372478001218400†L319-L323】.
+* **Pinned ChatGPT tab.**  A pinned tab (on `chat.openai.com`) is created or reused to send prompts.  This avoids the need to embed ChatGPT directly in the panel, which would violate the site’s `X‑Frame‑Options` and content‑security‑policy restrictions.
 * **Automatic prompt generation.**  When you click **“摘要當前頁面”** in the side panel, the extension reads the URL of the active tab, composes a Chinese summarisation prompt, and injects it into the ChatGPT input box.  The prompt asks ChatGPT to produce a 5–7 sentence summary covering the key points and conclusions of the page.
 
 ## Installation
@@ -32,7 +32,7 @@ This Chrome extension adds a single button to the browser’s side panel that le
 * The **side panel page** (`panel.html` and `panel.js`) renders the UI and sends messages to the background script when the summarisation button is clicked.
 * A **content script** (`content.js`) runs on ChatGPT pages.  When it receives a `setPrompt` message it locates the textarea on the page and sets its value to the supplied prompt.
 
-By avoiding iframe embedding of ChatGPT, this design respects the site’s security headers and therefore does not require removing `content‑security‑policy` or `x‑frame‑options` headers【372478001218400†L319-L323】.
+By avoiding iframe embedding of ChatGPT, this design respects the site’s security headers and therefore does not require removing `content‑security‑policy` or `x‑frame‑options` headers.
 
 ## Limitations
 
