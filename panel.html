@@ -1,38 +1,54 @@
-<!doctype html>
-<!--
-  panel.html
-  This file defines the UI for the extension's side panel. It contains a
-  single button which, when clicked, sends a request to summarize the
-  current page's content by populating a prompt in the pinned ChatGPT tab.
--->
+<!DOCTYPE html>
 <html lang="zh-Hant">
-  <head>
-    <meta charset="utf-8" />
-    <style>
-      body {
-        font-family: sans-serif;
-        margin: 16px;
-        padding: 0;
-      }
-      button {
-        width: 100%;
-        padding: 12px;
-        font-size: 16px;
-        margin-bottom: 12px;
-        cursor: pointer;
-      }
-      .note {
-        font-size: 12px;
-        color: #555;
-        margin-top: 8px;
-      }
-    </style>
-  </head>
-  <body>
-    <button id="summarize">摘要當前頁面</button>
-    <div class="note">
-      按下按鈕後，擴充套件會在 ChatGPT 的輸入框填入摘要提示。（請先登入 ChatGPT）
-    </div>
-    <script src="panel.js"></script>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <title>ChatGPT Sidebar</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    #controls {
+      display: flex;
+      align-items: center;
+      padding: 8px;
+      background: #f7f7f7;
+      border-bottom: 1px solid #ddd;
+    }
+    #summarizeBtn {
+      padding: 6px 12px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    #status {
+      margin-left: 8px;
+      font-size: 12px;
+      color: #666;
+    }
+    #iframeContainer {
+      flex: 1;
+      position: relative;
+      width: 100%;
+    }
+    #chatFrame {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <button id="summarizeBtn">摘要當前頁面</button>
+    <span id="status"></span>
+  </div>
+  <div id="iframeContainer">
+    <iframe id="chatFrame" src=""></iframe>
+  </div>
+  <script src="panel.js"></script>
+</body>
 </html>

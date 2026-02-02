@@ -1,72 +1,55 @@
 // background.js
-// Service worker for the ChatGPT summarizer sidebar extension.
-// Maintains a pinned ChatGPT tab and forwards prompts from the side panel
-// to the content script running in that tab.
+// This service worker sets up dynamic rules to remove security headers
+// that would otherwise block ChatGPT from loading in an iframe. It also
+// configures the side panel to open when the extension icon is clicked.
 
-let chatGPTTabId = null;
-
-/**
- * Ensure there is a pinned ChatGPT tab open. If one exists, reuse it,
- * otherwise create a new pinned tab pointing at chat.openai.com.
- * @returns {Promise<number>} The tab ID of the ChatGPT tab.
- */
-async function ensureChatGPTTab() {
-  // Look for existing ChatGPT tabs (either chat.openai.com or chatgpt.com)
-  const candidates = await chrome.tabs.query({
-    url: ["https://chat.openai.com/*", "https://chatgpt.com/*"]
-  });
-  // Prefer a pinned tab if available
-  const pinned = candidates.find(t => t.pinned);
-  if (pinned) {
-    chatGPTTabId = pinned.id;
-    return chatGPTTabId;
-  }
-  if (candidates.length > 0) {
-    // Pin the first existing ChatGPT tab
-    chatGPTTabId = candidates[0].id;
-    await chrome.tabs.update(chatGPTTabId, {pinned: true});
-    return chatGPTTabId;
-  }
-  // No existing tab – create one and pin it
-  const newTab = await chrome.tabs.create({
-    url: "https://chat.openai.com/",
-    pinned: true,
-    active: false
-  });
-  chatGPTTabId = newTab.id;
-  return chatGPTTabId;
-}
-
-// Open the side panel when the user clicks the extension icon
+// When the extension is installed or updated, configure the dynamic
+// declarativeNetRequest rules. Removing the content‑security‑policy and
+// x‑frame‑options headers allows ChatGPT to render inside the side panel
+// iframe. Two separate rules are defined to cover both chat.openai.com
+// and chatgpt.com domains.
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }).catch(() => {});
-});
+  const rules = [
+    {
+      id: 1,
+      priority: 1,
+      action: {
+        type: 'modifyHeaders',
+        responseHeaders: [
+          { header: 'content-security-policy', operation: 'remove' },
+          { header: 'x-frame-options', operation: 'remove' }
+        ]
+      },
+      condition: {
+        urlFilter: 'https://chat.openai.com/*',
+        resourceTypes: ['main_frame', 'sub_frame']
+      }
+    },
+    {
+      id: 2,
+      priority: 1,
+      action: {
+        type: 'modifyHeaders',
+        responseHeaders: [
+          { header: 'content-security-policy', operation: 'remove' },
+          { header: 'x-frame-options', operation: 'remove' }
+        ]
+      },
+      condition: {
+        urlFilter: 'https://chatgpt.com/*',
+        resourceTypes: ['main_frame', 'sub_frame']
+      }
+    }
+  ];
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  // Use an async function so that we can await ensureChatGPTTab
-  (async () => {
-    if (message.type === 'ensureTab') {
-      const id = await ensureChatGPTTab();
-      sendResponse({ tabId: id });
-      return;
-    }
-    if (message.type === 'setPrompt') {
-      // Guarantee ChatGPT tab exists
-      if (!chatGPTTabId) {
-        await ensureChatGPTTab();
-      }
-      if (chatGPTTabId) {
-        try {
-          await chrome.tabs.sendMessage(chatGPTTabId, { type: 'setPrompt', prompt: message.prompt });
-        } catch (err) {
-          // If tab is closed or content script not ready, attempt to recreate and resend
-          chatGPTTabId = null;
-          const id = await ensureChatGPTTab();
-          await chrome.tabs.sendMessage(id, { type: 'setPrompt', prompt: message.prompt });
-        }
-      }
-    }
-  })();
-  // Indicate we'll send a response asynchronously if needed
-  return true;
+  // Remove any existing rules with the same IDs before adding the new ones.
+  chrome.declarativeNetRequest.updateDynamicRules({
+    addRules: rules,
+    removeRuleIds: rules.map((r) => r.id)
+  });
+
+  // Ensure that clicking the extension icon opens the side panel.
+  chrome.sidePanel
+    .setPanelBehavior({ openPanelOnActionClick: true })
+    .catch((error) => console.error('Failed to set panel behavior:', error));
 });
