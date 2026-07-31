@@ -1,42 +1,73 @@
-# ChatGPT Side Panel Summarizer (Embedded)
+# ChatGPT Side Panel Summarizer
 
-This Chrome extension adds a ChatGPT panel inside Chrome's side panel and a button that summarises the current page.  It uses dynamic network rules to remove `Content‑Security‑Policy` and `X‑Frame‑Options` response headers from ChatGPT domains so that the chat interface can be embedded in an `<iframe>` in the side panel.  The summarisation button reads the URL of the active tab, constructs a prompt in Chinese instructing ChatGPT to summarise the page's content, and writes it into the conversation input box inside the embedded ChatGPT UI.
+[繁體中文](README.md) | [English](README.en.md)
 
-## Features
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Manifest](https://img.shields.io/badge/Manifest-V3-blue.svg)](manifest.json)
+[![Platform](https://img.shields.io/badge/Platform-Chrome-lightgrey.svg)](#安裝)
+[![CI](https://github.com/SanHsien/chatgpt-sidebar/actions/workflows/ci.yml/badge.svg)](https://github.com/SanHsien/chatgpt-sidebar/actions/workflows/ci.yml)
 
-- **Embedded ChatGPT in the side panel.**  The extension loads ChatGPT in a side‑panel iframe so you can chat without leaving your current page.
-- **Header bypass for embedding.**  A dynamic rule in the background service worker removes restrictive headers (`Content‑Security‑Policy` and `X‑Frame‑Options`) from responses from `chat.openai.com` and `chatgpt.com` to permit the iframe.
-- **Summarisation button.**  A button in the side panel reads the URL of the active tab and generates a Chinese‑language prompt asking ChatGPT to summarise the page.  The prompt is automatically inserted into the chat input field.
-- **Session support.**  If you are signed in to ChatGPT, the embedded chat will use your session.  If you are not signed in, the iframe will prompt you to log in.
+在 Chrome 側邊欄嵌入 ChatGPT，並用一鍵把**目前分頁網址**組成繁體中文摘要提示詞，寫入聊天輸入框。
 
-## Installation
+本擴充功能**無後端、不代管 API key**；摘要能力依賴你自己的 ChatGPT 登入態與網頁介面。
 
-1. Clone or download this repository.
-2. In Chrome, open `chrome://extensions/`.
-3. Enable **Developer mode**.
-4. Click **Load unpacked** and select the extension directory.
-5. An icon labelled **ChatGPT Side Panel Summarizer** will appear in the toolbar.
+> [!IMPORTANT]
+> 為了讓 ChatGPT 能在側邊欄 iframe 載入，擴充功能會移除 ChatGPT 網域回應中的 `Content-Security-Policy` 與 `X-Frame-Options`。這會削弱 clickjacking 防護，請只在信任的本機環境使用。細節見 [`NOTICE.md`](NOTICE.md)。
 
-## Usage
+## 功能
 
-1. Click the extension icon to open the side panel.  The embedded ChatGPT interface will load; sign in if required.
-2. Navigate to the web page you want to summarise.
-3. In the side panel, click **摘要當前頁面**.  The extension will:
-   - Get the URL of the active tab.
-   - Compose a Chinese summarisation prompt including the URL (for example, asking ChatGPT to summarise the article in 5–8 sentences and list background, problem, method and conclusion).
-   - Inject the prompt into the chat input inside the side panel.  You can review and send it.
-4. ChatGPT will return a summary directly in the side panel.
+- **側邊欄嵌入 ChatGPT**：工具列圖示開啟 Chrome Side Panel，以 iframe 載入 ChatGPT。
+- **一鍵摘要**：按鈕讀取目前分頁 URL，組成繁中摘要提示詞並寫入聊天輸入框（你可再檢查後送出）。
+- **沿用既有登入**：若瀏覽器已登入 ChatGPT，嵌入畫面會沿用該工作階段；未登入則可在 iframe 內登入。
 
-## How it works
+## 安裝
 
-- The **background service worker** (`background.js`) installs a dynamic network rule via `chrome.declarativeNetRequest.updateDynamicRules` that strips `content‑security‑policy` and `x‑frame‑options` headers from responses from ChatGPT domains.  It also ensures the side panel opens when the action icon is clicked.
-- The **side panel page** (`panel.html` and `panel.js`) contains an `<iframe>` whose `src` is set to `https://chat.openai.com/`.  The page also includes a button that sends a `setPrompt` message to the background script when clicked.
-- A **content script** (`content.js`) runs on ChatGPT pages.  When it receives a `setPrompt` message, it finds the visible textarea within the chat interface, sets its value to the supplied prompt, and dispatches input events so ChatGPT recognises the new text.
+1. Clone 或下載本 repository。
+2. 開啟 Chrome → `chrome://extensions/`。
+3. 開啟右上角**開發人員模式**。
+4. 點**載入未封裝項目**，選擇本 repo 根目錄（含 `manifest.json` 的那層）。
+5. 工具列應出現擴充功能圖示。
 
-## Security considerations
+## 使用
 
-This extension bypasses certain security headers (specifically `Content‑Security‑Policy` and `X‑Frame‑Options`) on ChatGPT domains to allow them to be framed.  This weakens the built‑in protection against clickjacking attacks.  Use this extension only in a trusted environment and do not distribute it widely.  Be aware that future changes to ChatGPT's UI or security policies may break the extension.
+1. 點擴充功能圖示，開啟側邊欄；必要時在 iframe 內登入 ChatGPT。
+2. 切到要摘要的網頁分頁。
+3. 在側邊欄按**摘要當前頁面**。擴充功能會：
+   - 取得目前分頁 URL；
+   - 組成繁中摘要提示（約 5–7 句概述、背景／問題／方法／結論、3 點建議）；
+   - 把提示詞寫入嵌入的聊天輸入框，由你確認後送出。
 
-## License
+## 專案結構
 
-MIT
+```text
+.
+├── manifest.json          # MV3 宣告
+├── background.js          # service worker：DNR 規則、側邊欄行為
+├── panel.html / panel.js  # 側邊欄 UI 與摘要按鈕
+├── content.js             # 在 ChatGPT 頁面寫入提示詞
+├── icons/                 # 擴充功能圖示
+├── tools/                 # 驗證腳本
+├── docs/                  # 開發、決策、GitHub About
+├── README.md / README.en.md / CHANGELOG.md / REVIEW.md
+├── AGENTS.md / CLAUDE.md / SKILL.md
+└── NOTICE.md / LICENSE
+```
+
+## 開發與驗證
+
+```bash
+node --check background.js content.js panel.js
+node tools/validate-extension.mjs
+```
+
+完整說明見 [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)。AI agent 接手規則見 [`AGENTS.md`](AGENTS.md)。
+
+## 安全注意
+
+- 本工具只應在本機、受信任環境使用。
+- 不要把 cookies、登入態或私密憑證提交進版控。
+- ChatGPT UI 改版可能讓 content script 選取器失效；屆時需更新 `content.js`。
+
+## 授權
+
+MIT。見 [`LICENSE`](LICENSE) 與 [`NOTICE.md`](NOTICE.md)。
