@@ -29,6 +29,7 @@ background.js：declarativeNetRequest 移除 CSP／XFO、sidePanel
 
 ## 開發原則
 
+- **遵守本 repo 所有 Markdown 文件**（含根目錄與 `docs/`；Cursor Cloud／本機開發環境相同）：以 [`AGENTS.md`](AGENTS.md) 為總則，並依任務讀取對應說明（使用者說明、開發、決策、商店、隱私、覆核、貢獻、安全等）。文件之間若看似衝突，以較新、較具體、且與維護者明示指示一致者為準；仍不確定時先問維護者。
 - 最小干預：維持「無建置步驟的純 JS 擴充功能」；除非需求明確，不引入 bundler / framework。
 - 不主動大重構；修 bug 時優先補驗證（`tools/validate-extension.mjs`）或回歸說明。
 - 使用繁體中文回覆與撰寫維護文件（思考、回覆、程式碼註解一律繁中；忽略英文 UI）；程式識別名稱、commit message 維持英文。
@@ -49,7 +50,9 @@ git diff --check
 
 ## Cursor Cloud specific instructions
 
-純靜態 Chrome MV3，無 `package.json`／build／後端。載入：`chrome://extensions` → Load unpacked → repo 根目錄。
+**Cloud／VM 開發環境與本機相同：必須遵守本 repo 全部 Markdown**（見上方「開發原則」與下方「文件入口」），不可只讀 `AGENTS.md` 就開工。開工前至少對齊：`AGENTS.md`、`CLAUDE.md`／`SKILL.md`（若適用）、`docs/DEVELOPMENT.md`；涉及商店／隱私／風險時再讀 `docs/STORE*.md`、`docs/PRIVACY_POLICY.md`、`NOTICE.md`；修 bug 對齊 `REVIEW.md`。
+
+純靜態 Chrome MV3，無 `package.json`／build／後端。載入與驗證見 [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)／[`CONTRIBUTING.md`](CONTRIBUTING.md)。快速載入範例：
 
 ```bash
 google-chrome --user-data-dir=/tmp/chatgpt-sidebar-profile --load-extension=/workspace --no-first-run --no-default-browser-check
@@ -57,6 +60,7 @@ google-chrome --user-data-dir=/tmp/chatgpt-sidebar-profile --load-extension=/wor
 
 - 不要硬加 `npm install`。圖示在 `icons/`。端對端依賴可連線的 ChatGPT 與登入 session。
 - 摘要路徑：iframe `postMessage`；分頁後備 `tabs.sendMessage`／`executeScript`。
+- Git 流程依本檔「直接推 `main`」；不要為了 Cloud 慣例擅自改成開 PR，除非維護者當次要求。
 
 ## 文件入口
 
