@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <title>ChatGPT Sidebar</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", "Noto Sans TC", sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #f5f5f5;
+      color: #222;
+    }
+    #toolbar {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 6px;
+      background: #f7f7f7;
+      border-bottom: 1px solid #ddd;
+      flex-shrink: 0;
+      flex-wrap: nowrap;
+      min-width: 0;
+    }
+    #toolbar button {
+      flex: 0 0 auto;
+      white-space: nowrap;
+      padding: 4px 7px;
+      font-size: 12px;
+      line-height: 1.2;
+      cursor: pointer;
+    }
+    #toolbar button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+    #status {
+      flex: 1 1 auto;
+      min-width: 2.5em;
+      font-size: 12px;
+      color: #666;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: right;
+      padding-left: 2px;
+    }
+    #hintBar {
+      display: none;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 10px;
+      background: #fff8e8;
+      border-bottom: 1px solid #ead9a8;
+      flex-shrink: 0;
+    }
+    #hintBar.is-visible {
+      display: flex;
+    }
+    #hintBar .hint-body {
+      flex: 1 1 auto;
+      min-width: 0;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #5a4a20;
+    }
+    #hintBar .hint-body strong {
+      display: block;
+      margin-bottom: 2px;
+      font-size: 12px;
+      color: #3d3216;
+    }
+    #hintDismissBtn {
+      flex: 0 0 auto;
+      padding: 4px 8px;
+      font-size: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    #settings {
+      display: none;
+      padding: 10px 12px 12px;
+      background: #fafafa;
+      border-bottom: 1px solid #e5e5e5;
+      flex-shrink: 0;
+      max-height: 46vh;
+      overflow: auto;
+    }
+    #settings.is-open {
+      display: block;
+    }
+    #settings label {
+      display: block;
+      font-size: 12px;
+      color: #444;
+      margin: 0 0 4px;
+    }
+    #settings .field {
+      margin-bottom: 10px;
+    }
+    #settings select,
+    #settings textarea {
+      width: 100%;
+      box-sizing: border-box;
+      font: inherit;
+      font-size: 12px;
+      padding: 6px 8px;
+      border: 1px solid #ccd2d8;
+      border-radius: 6px;
+      background: #fff;
+    }
+    #settings textarea {
+      min-height: 100px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+    #settings .row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 12px;
+    }
+    #settings .row label {
+      margin: 0;
+    }
+    #settings .hint {
+      margin: 0 0 8px;
+      font-size: 11px;
+      color: #777;
+      line-height: 1.45;
+    }
+    #settings .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    #iframeContainer {
+      flex: 1;
+      position: relative;
+      width: 100%;
+      min-height: 0;
+    }
+    #chatFrame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: none;
+      background: #fff;
+    }
+    #chatFrame.is-visible {
+      display: block;
+    }
+    #notice {
+      display: none;
+      box-sizing: border-box;
+      height: 100%;
+      padding: 24px 20px;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: linear-gradient(160deg, #eef1f5, #f7f8fa);
+    }
+    #notice.is-visible {
+      display: flex;
+    }
+    #notice .card {
+      max-width: 320px;
+      background: #fff;
+      border: 1px solid #e2e5ea;
+      border-radius: 10px;
+      padding: 20px 18px;
+      box-shadow: 0 8px 24px rgba(20, 30, 50, 0.06);
+    }
+    #notice h1 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      font-weight: 650;
+    }
+    #notice p {
+      margin: 0 0 16px;
+      font-size: 13px;
+      line-height: 1.55;
+      color: #444;
+    }
+    #notice .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+    #notice button,
+    #notice a.button,
+    #settings button,
+    #toolbar button,
+    #hintDismissBtn {
+      appearance: none;
+      border: 1px solid #c9ced6;
+      background: #fff;
+      color: #222;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+    #notice button.primary,
+    #notice a.button.primary,
+    #settings button.primary {
+      background: #183038;
+      border-color: #183038;
+      color: #fff;
+    }
+    #notice button,
+    #notice a.button,
+    #settings button {
+      padding: 7px 12px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="toolbar">
+    <button type="button" class="action-btn" data-action="summarize" disabled title="摘要目前分頁">摘要</button>
+    <button type="button" class="action-btn" data-action="translate" disabled title="翻譯目前分頁的選取文字">翻譯</button>
+    <button type="button" class="action-btn" data-action="explain" disabled title="解釋目前分頁的選取文字">解釋</button>
+    <button type="button" class="action-btn" data-action="outline" disabled title="依目前分頁可見全文產生大綱（不需選取）">大綱</button>
+    <button id="reloadSessionBtn" type="button" title="重新檢查 ChatGPT 登入狀態">檢查</button>
+    <button id="settingsToggleBtn" type="button" title="設定">設定</button>
+    <span id="status" title="">檢查中…</span>
+  </div>
+  <div id="hintBar" role="status" aria-live="polite">
+    <div class="hint-body">
+      <strong id="hintTitle"></strong>
+      <span id="hintMessage"></span>
+    </div>
+    <button id="hintDismissBtn" type="button">知道了</button>
+  </div>
+  <div id="settings" aria-hidden="true">
+    <p class="hint">
+      設定存於 <code>chrome.storage.sync</code>。模板可用
+      <code>{{url}}</code>、<code>{{title}}</code>、<code>{{selection}}</code>、<code>{{content}}</code>。
+      頁面文字只在你按動作時於<strong>本機</strong>讀取，並寫入你自己的 ChatGPT 輸入框；本擴充功能沒有後端、不上傳。
+    </p>
+    <div class="field">
+      <label for="originSelect">ChatGPT 網域</label>
+      <select id="originSelect">
+        <option value="https://chatgpt.com">chatgpt.com</option>
+        <option value="https://chat.openai.com">chat.openai.com</option>
+      </select>
+    </div>
+    <div class="field row">
+      <input id="includePageContent" type="checkbox" />
+      <label for="includePageContent">摘要時附上頁面可見文字（建議開啟；僅本機讀取。大綱一律附全文）</label>
+    </div>
+    <div class="field row">
+      <input id="focusAfterInsert" type="checkbox" />
+      <label for="focusAfterInsert">寫入後聚焦輸入框（預設關閉）</label>
+    </div>
+    <div class="field">
+      <label for="templateActionSelect">編輯哪個動作的模板</label>
+      <select id="templateActionSelect">
+        <option value="summarize">摘要</option>
+        <option value="translate">翻譯</option>
+        <option value="explain">解釋</option>
+        <option value="outline">大綱</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="promptTemplate">提示詞模板</label>
+      <textarea id="promptTemplate" spellcheck="false"></textarea>
+    </div>
+    <div class="actions">
+      <button id="saveSettingsBtn" class="primary" type="button">儲存</button>
+      <button id="resetTemplateBtn" type="button">還原此動作預設</button>
+    </div>
+  </div>
+  <div id="iframeContainer">
+    <div id="notice" class="is-visible" aria-live="polite">
+      <div class="card">
+        <h1 id="noticeTitle">載入中</h1>
+        <p id="noticeMessage">正在檢查 ChatGPT 登入狀態…</p>
+        <div class="actions">
+          <button id="noticeRetryBtn" class="primary" type="button">重試</button>
+          <a id="noticeOpenLink" class="button" href="https://chatgpt.com/" target="_blank" rel="noreferrer">開啟 ChatGPT</a>
+        </div>
+      </div>
+    </div>
+    <iframe id="chatFrame" title="ChatGPT" src=""></iframe>
+  </div>
+  <script src="panel.js"></script>
+</body>
+</html>
