@@ -31,3 +31,5 @@ google-chrome --user-data-dir=/tmp/chatgpt-sidebar-profile --load-extension=/wor
 - **圖示路徑**：`manifest.json` 指向 `icons/icon*.png`，但 repo 根目錄目前是 `icon*.png`（沒有 `icons/`）。載入時工具列圖示可能缺失，但不影響側邊欄與摘要核心流程。若本地要補齊，可暫時建立 `icons/` 並連結／複製根目錄圖示（勿把絕對路徑 symlink commit 進 repo）。
 - **端對端依賴外部 ChatGPT**：側邊欄 iframe 會載入 `https://chat.openai.com`；完整摘要流程需要可連線的網路，以及（可選）已登入的 ChatGPT session。未登入時 iframe 會停在登入頁，但擴充功能本身仍可載入與開啟側邊欄。
 - **Hello-world 驗收建議**：Load unpacked → 點擴充功能圖示開 side panel → 開一個一般網頁分頁 → 按「摘要當前頁面」。未登入 ChatGPT 時，至少應看到狀態文字更新（例如取得網址／傳送提示）。
+- **摘要訊息傳遞**：`panel.js` 用 `chrome.runtime.sendMessage({ action: 'insert_prompt' })`；若 content script 尚未注入／無接收端，狀態會變成「傳送提示時發生錯誤。」（Console：`Receiving end does not exist`）。這不代表擴充功能未載入；側邊欄與 iframe 嵌入仍可獨立驗收。完整注入提示需要 ChatGPT 頁面已載入且 content script 就緒（通常需已登入或可互動的聊天 UI）。
+- **沒有 lint / test 腳本**：可用 `node --check *.js` 與 `python3 -c "import json; json.load(open('manifest.json'))"` 做基本語法檢查。
