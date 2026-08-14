@@ -35,7 +35,7 @@ Chrome 以「載入未封裝項目」選 repo 根目錄做手動驗證。
 
 ## 提交流程
 
-- **維護者**：直接 commit 並推 `main`（見 [`AGENTS.md`](AGENTS.md)），常規工作不開 PR。
+- **維護者／Agent**：直接 commit 並推 `main`（見 [`AGENTS.md`](AGENTS.md)），常規工作不開 PR。
 - **外部貢獻**：Fork → 開分支 → 清楚的 commit message → 確認驗證通過 → 開 PR，說明動機與改動；若涉及 header bypass 或權限，請明確標註。
 
 ## 不要提交的東西

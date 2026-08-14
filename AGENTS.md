@@ -34,7 +34,7 @@ background.js：declarativeNetRequest 移除 CSP／XFO、sidePanel
 - 不主動大重構；修 bug 時優先補驗證（`tools/validate-extension.mjs`）或回歸說明。
 - 使用繁體中文回覆與撰寫維護文件（思考、回覆、程式碼註解一律繁中；忽略英文 UI）；程式識別名稱、commit message 維持英文。
 - 使用者說明 → [`README.md`](README.md)／[`README.en.md`](README.en.md)；開發／排查 → [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)；取捨 → [`docs/DECISIONS.md`](docs/DECISIONS.md)。
-- **直接推 `main`，不開 PR**（維護者 2026-07-31）：完成後 commit 並 `git push origin main`；除非維護者當次明確要求開 PR。
+- **直接推 `main`，不開 PR**（維護者 2026-07-31，2026-08-14 再確認）：完成後 commit 並 `git push origin main`。**含 Cursor Cloud Agent**：不要開 feature branch、不要建立或更新 pull request。除非維護者**當次**明確要求開 PR。
 - **使用者可見改動要發 Release**：升 `manifest.json` 版本 → 更新 `CHANGELOG.md` → `node tools/pack-extension.mjs` → 打 tag `vX.Y.Z` → `gh release create` 上傳 zip／sha256。只 push 不算完成。
 - **修 bug 必回註 `REVIEW.md`**：對應項目標註修復 commit hash 與日期；額外修掉的 bug 也要補註。
 
@@ -60,7 +60,7 @@ google-chrome --user-data-dir=/tmp/chatgpt-sidebar-profile --load-extension=/wor
 
 - 不要硬加 `npm install`。圖示在 `icons/`。端對端依賴可連線的 ChatGPT 與登入 session。
 - 摘要路徑：iframe `postMessage`；分頁後備 `tabs.sendMessage`／`executeScript`。
-- Git 流程依本檔「直接推 `main`」；不要為了 Cloud 慣例擅自改成開 PR，除非維護者當次要求。
+- Git 流程依本檔「直接推 `main`」；Cursor Cloud 預設的「開分支／開 PR」**不適用本 repo**。不要為了 Cloud 慣例擅自開 PR。
 
 ## 文件入口
 

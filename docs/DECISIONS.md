@@ -1,5 +1,10 @@
 # Decisions
 
+## 2026-08-14：再次確認直接推 main
+
+- 維護者再確認：以後變更直接推 `main`，不要開 PR（含 Cloud Agent）。
+- Cursor／Cloud 預設的 feature branch + PR 流程不適用本 repo。
+
 ## 2026-08-14：商店隱私權政策改靜態 HTML
 
 - Chrome Web Store 於 2026-08-02 拒絕（Purple Nickel）：隱私權政策連結無效或無法使用。
