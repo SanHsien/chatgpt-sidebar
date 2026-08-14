@@ -2,7 +2,7 @@
 
 ## 結論
 
-`v0.5.10`：寫入前先清空；附文盡量全文；長文一次 paste。維護者已**送出 Chrome Web Store 審查**（等待結果）。GitHub Release 仍為主要／並行發行管道。
+`v0.5.10`：寫入前先清空；附文盡量全文；長文一次 paste。Chrome Web Store 於 2026-08-02 因隱私權政策連結無效拒絕（Purple Nickel）；已改靜態 HTML 公開頁，待維護者在 Dashboard 更新 URL 後重送。GitHub Release 仍為主要／並行發行管道。
 
 ## 本機實測（維護者）
 
@@ -12,7 +12,7 @@
 | Notion 等頁翻譯／解釋／大綱 | **v0.5.4** 起有主機權限 |
 | Cloudflare 阻擋 UI | **目前無法測試** |
 | 未來 DOM 改版 | **長期觀測** |
-| Chrome Web Store | **審查中** |
+| Chrome Web Store | **2026-08-02 拒絕**（隱私權政策連結）；靜態 HTML 已補，待重送 |
 
 ## 已修復（節錄）
 
@@ -26,3 +26,4 @@
 
 - CSP／XFO 與頁面文字：[`NOTICE.md`](NOTICE.md)、[`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md)
 - 商店：[`docs/STORE.md`](docs/STORE.md)、[`docs/STORE_LISTING.md`](docs/STORE_LISTING.md)
+- CWS Purple Nickel（隱私權政策連結無效，2026-08-02）— 改 [`docs/privacy.html`](docs/privacy.html) 公開頁（2026-08-14）

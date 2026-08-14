@@ -74,6 +74,8 @@ const required = [
   'LICENSE',
   'NOTICE.md',
   'AGENTS.md',
+  'docs/privacy.html',
+  'docs/PRIVACY_POLICY.md',
 ];
 
 for (const rel of required) {
@@ -90,6 +92,19 @@ for (const rel of jsFiles) {
   });
   if (result.status !== 0) {
     fail(`${rel} 語法檢查失敗：${(result.stderr || result.stdout || '').trim()}`);
+  }
+}
+
+if (exists('docs/privacy.html')) {
+  const privacy = fs.readFileSync(path.join(root, 'docs/privacy.html'), 'utf8');
+  if (!/<!DOCTYPE html>/i.test(privacy)) {
+    fail('docs/privacy.html 須為完整 HTML（含 DOCTYPE），供商店爬蟲讀取');
+  }
+  if (/<script[\s>]/i.test(privacy)) {
+    fail('docs/privacy.html 不可含 script，以免商店爬蟲判連結無效');
+  }
+  if (!/隱私|Privacy Policy/i.test(privacy) || !/收集|collect/i.test(privacy)) {
+    fail('docs/privacy.html 須說明資料收集（中或英）');
   }
 }
 

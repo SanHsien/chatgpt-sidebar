@@ -28,6 +28,7 @@ description: 維護 SanHsien/chatgpt-sidebar。Chrome MV3 側邊欄嵌入 ChatGP
 - `AGENTS.md`／`CLAUDE.md`：AI 規則（以 AGENTS 為準）。
 - `docs/DEVELOPMENT.md`：架構、載入、排查、選擇器。
 - `docs/STORE.md`：商店與「問問 Gemini」對照。
+- `docs/privacy.html`：Chrome Web Store 用公開隱私權政策（勿用 GitHub blob URL）。
 - `manifest.json`、`background.js`／`panel.js`／`content.js`：核心路徑。
 - `tools/validate-extension.mjs`：驗證。
 

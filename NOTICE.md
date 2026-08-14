@@ -30,7 +30,7 @@ Copyright 2026 SanHsien
 
 不會做：沒有本專案後端、不上傳頁面內容到 SanHsien 伺服器、不代管 OpenAI API key；提示詞是否送出由你在 ChatGPT UI 決定。關閉設定「摘要時附上頁面可見文字」後，摘要模板的 `{{content}}` 會改為占位說明；**大綱不受此開關影響，仍會附上頁面可見全文**（結構大綱依賴內文）。
 
-仍請注意：寫入 ChatGPT 後內容進入 **OpenAI／ChatGPT** 處理流程；請勿對含機密、個資或無權分享的頁面附上可見文字。
+仍請注意：寫入 ChatGPT 後內容進入 **OpenAI／ChatGPT** 處理流程；請勿對含機密、個資或無權分享的頁面附上可見文字。商店用公開隱私權政策：[privacy.html](https://sanhsien.github.io/chatgpt-sidebar/privacy.html)。
 
 ## 安全邊界與風險聲明
 
