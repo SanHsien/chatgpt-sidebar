@@ -10,11 +10,7 @@
 
 https://sanhsien.github.io/chatgpt-sidebar/privacy.html
 
-若 GitHub Pages 尚未生效，可用：
-
-https://cdn.jsdelivr.net/gh/SanHsien/chatgpt-sidebar@main/docs/privacy.html
-
-請勿把 GitHub blob 頁（`github.com/.../blob/...`）填進 Chrome Web Store「隱私權政策」欄位；商店爬蟲常判該連結無效（Purple Nickel）。
+請勿把 GitHub blob 頁（`github.com/.../blob/...`）或 raw／jsDelivr 連結填進 Chrome Web Store「隱私權政策」欄位。blob 頁需 JS；raw／jsDelivr 的 HTML 常以 `text/plain` 送出，商店爬蟲會判連結無效（Purple Nickel）。
 
 ## 我們收集什麼
 

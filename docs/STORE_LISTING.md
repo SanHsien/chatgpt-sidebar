@@ -11,8 +11,9 @@
 
 1. 確認公開頁可開（**無痕視窗、未登入 GitHub**）：
    https://sanhsien.github.io/chatgpt-sidebar/privacy.html
-   - 若 404：到 repo **Settings → Pages**，Source 選 **GitHub Actions**（或 Deploy from a branch：`main`／`/docs`）後等一兩分鐘再試。
-   - 仍未生效時改用：https://cdn.jsdelivr.net/gh/SanHsien/chatgpt-sidebar@main/docs/privacy.html
+   - 若 404：repo **Settings → Pages** → Build and deployment → Source 選 **Deploy from a branch**，Branch 選 `main`、folder 選 `/docs` → Save。等一兩分鐘再試。
+   - 或 Source 選 **GitHub Actions**，並讓 `GitHub Pages` workflow 跑完（第一次可能要核准 `github-pages` environment）。
+   - **不要**改填 GitHub blob、raw.githubusercontent 或 jsDelivr（HTML 會變成純文字，審查會再判無效）。
 2. 開 [Chrome Developer Dashboard](https://chrome.google.com/webstore/devconsole) → 項目 **ChatGPT Sidebar (Embedded)**（ID `kilnbieekgofpkgbhohmogcjkebfflkd`）。
 3. **隱私權（Privacy）** 分頁最下方 **隱私權政策** 欄位（不是商品說明、也不是支援網址）貼上第 1 步確認可開的那條 URL。
 4. 按分頁上方 **儲存**（建議再按一次確認已寫入）。
@@ -95,13 +96,7 @@ ChatGPT Sidebar (Embedded) 讓你在瀏覽網頁時，於 Chrome 側邊欄使用
 https://sanhsien.github.io/chatgpt-sidebar/privacy.html
 ```
 
-備援（Pages 尚未生效時）：
-
-```text
-https://cdn.jsdelivr.net/gh/SanHsien/chatgpt-sidebar@main/docs/privacy.html
-```
-
-不要用 GitHub blob／raw 連結。
+不要用 GitHub blob、raw.githubusercontent 或 jsDelivr。Pages 尚未生效時請先啟用（見文首步驟），不要改填其他網址。
 
 ### 首頁／支援
 

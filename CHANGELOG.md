@@ -4,7 +4,7 @@
 
 ## Unreleased
 
-- **商店**：Chrome Web Store 因隱私權政策連結無效拒絕（Purple Nickel，2026-08-02）。改以靜態 HTML 公開頁 [`docs/privacy.html`](docs/privacy.html)（GitHub Pages／jsDelivr），勿再用 GitHub blob URL。重送步驟見 [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md)。
+- **商店**：Chrome Web Store 因隱私權政策連結無效拒絕（Purple Nickel，2026-08-02）。改以靜態 HTML 公開頁 [`docs/privacy.html`](docs/privacy.html)（GitHub Pages），勿再用 GitHub blob／raw／jsDelivr。重送步驟見 [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md)。
 
 ## v0.5.10
 
