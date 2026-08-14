@@ -1,5 +1,12 @@
 # Decisions
 
+## 2026-08-14：商店隱私權政策改靜態 HTML
+
+- Chrome Web Store 於 2026-08-02 拒絕（Purple Nickel）：隱私權政策連結無效或無法使用。
+- 原因：blob URL `github.com/.../blob/main/docs/PRIVACY_POLICY.md` 對商店爬蟲不友善（需 JS、cookie、可能像登入牆）。
+- 改以 [`privacy.html`](privacy.html) 公開靜態頁（GitHub Pages：`https://sanhsien.github.io/chatgpt-sidebar/privacy.html`）。不升版、不改擴充功能行為。blob／raw／jsDelivr 不適合作為商店隱私權欄位。
+- 維護者須在 Dashboard「隱私權」指定欄位貼上新 URL 並重送；Agent 無法代登。
+
 ## 2026-07-31：挑戰 Chrome Web Store 上架
 
 - 維護者指示挑戰申請上架（接受 iframe＋DNR 審核風險）。

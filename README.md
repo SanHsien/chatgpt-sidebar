@@ -72,7 +72,7 @@ node --check background.js content.js panel.js
 node tools/validate-extension.mjs
 ```
 
-開發／排查見 [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)。路線圖見 [`ROADMAP.md`](ROADMAP.md)。隱私與風險見 [`NOTICE.md`](NOTICE.md)、[`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md)。商店挑戰上架見 [`docs/STORE.md`](docs/STORE.md)、[`docs/STORE_LISTING.md`](docs/STORE_LISTING.md)。
+開發／排查見 [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)。路線圖見 [`ROADMAP.md`](ROADMAP.md)。隱私與風險見 [`NOTICE.md`](NOTICE.md)、[隱私權政策（公開頁）](https://sanhsien.github.io/chatgpt-sidebar/privacy.html)。商店挑戰上架見 [`docs/STORE.md`](docs/STORE.md)、[`docs/STORE_LISTING.md`](docs/STORE_LISTING.md)。
 
 ## 安全注意
 

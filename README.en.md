@@ -72,7 +72,7 @@ node --check background.js content.js panel.js
 node tools/validate-extension.mjs
 ```
 
-See [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) (dev + troubleshooting), [`ROADMAP.md`](ROADMAP.md), [`NOTICE.md`](NOTICE.md) (privacy + risks), [`docs/STORE.md`](docs/STORE.md) (store / Ask Gemini), and [`AGENTS.md`](AGENTS.md).
+See [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) (dev + troubleshooting), [`ROADMAP.md`](ROADMAP.md), [`NOTICE.md`](NOTICE.md) (privacy + risks), [Privacy Policy](https://sanhsien.github.io/chatgpt-sidebar/privacy.html), [`docs/STORE.md`](docs/STORE.md) (store / Ask Gemini), and [`AGENTS.md`](AGENTS.md).
 
 ## Security notes
 

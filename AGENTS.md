@@ -50,7 +50,7 @@ git diff --check
 
 ## Cursor Cloud specific instructions
 
-**Cloud／VM 開發環境與本機相同：必須遵守本 repo 全部 Markdown**（見上方「開發原則」與下方「文件入口」），不可只讀 `AGENTS.md` 就開工。開工前至少對齊：`AGENTS.md`、`CLAUDE.md`／`SKILL.md`（若適用）、`docs/DEVELOPMENT.md`；涉及商店／隱私／風險時再讀 `docs/STORE*.md`、`docs/PRIVACY_POLICY.md`、`NOTICE.md`；修 bug 對齊 `REVIEW.md`。
+**Cloud／VM 開發環境與本機相同：必須遵守本 repo 全部 Markdown**（見上方「開發原則」與下方「文件入口」），不可只讀 `AGENTS.md` 就開工。開工前至少對齊：`AGENTS.md`、`CLAUDE.md`／`SKILL.md`（若適用）、`docs/DEVELOPMENT.md`；涉及商店／隱私／風險時再讀 `docs/STORE*.md`、`docs/PRIVACY_POLICY.md`、`docs/privacy.html`、`NOTICE.md`；修 bug 對齊 `REVIEW.md`。
 
 純靜態 Chrome MV3，無 `package.json`／build／後端。載入與驗證見 [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)／[`CONTRIBUTING.md`](CONTRIBUTING.md)。快速載入範例：
 
@@ -72,7 +72,7 @@ google-chrome --user-data-dir=/tmp/chatgpt-sidebar-profile --load-extension=/wor
 | [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) | 架構、載入、驗證、排查、選擇器 |
 | [`docs/STORE.md`](docs/STORE.md) | 商店策略與「問問 Gemini」對照 |
 | [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md) | 上架可貼文案／步驟（須維護者本機送出） |
-| [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md) | 商店用隱私政策 |
+| [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md)／[`docs/privacy.html`](docs/privacy.html) | 商店用隱私政策（HTML 為公開頁） |
 | [`docs/DECISIONS.md`](docs/DECISIONS.md) | 決策紀錄（含 GitHub About 建議） |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md)／[`SECURITY.md`](SECURITY.md) | 貢獻與漏洞回報 |
 | [`CLAUDE.md`](CLAUDE.md)／[`SKILL.md`](SKILL.md) | Claude／Skill 入口（規則以本檔為準） |

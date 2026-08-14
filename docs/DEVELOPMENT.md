@@ -66,6 +66,17 @@ node tools/pack-extension.mjs
 
 `.github/workflows/ci.yml` 在 push／PR 跑同上的 Node 語法檢查與 `validate-extension.mjs`。Dependabot 僅追蹤 GitHub Actions。
 
+`.github/workflows/pages.yml` 在 push `main` 時把 `docs/privacy.html` 發到 GitHub Pages，供 Chrome Web Store 隱私權政策欄位使用。公開 URL：https://sanhsien.github.io/chatgpt-sidebar/privacy.html
+
+## 商店隱私權頁
+
+審查爬蟲需要**不需登入、不需 JavaScript** 的 HTML。維護檔：
+
+- [`docs/privacy.html`](privacy.html)：商店用公開頁
+- [`docs/PRIVACY_POLICY.md`](PRIVACY_POLICY.md)：Markdown 原文（兩者內容需同步）
+
+不要把 `github.com/.../blob/...` 填進 Dashboard。重送步驟見 [`STORE_LISTING.md`](STORE_LISTING.md)。
+
 ## 排查
 
 ### 擴充功能是否正確載入
