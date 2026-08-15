@@ -1,93 +1,125 @@
-# ChatGPT Side Panel Summarizer
+# ChatGPT Sidebar
 
 [繁體中文](README.md) | [English](README.en.md)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Manifest](https://img.shields.io/badge/Manifest-V3-blue.svg)](manifest.json)
-[![Release](https://img.shields.io/github/v/release/SanHsien/chatgpt-sidebar?sort=semver&display_name=tag)](https://github.com/SanHsien/chatgpt-sidebar/releases)
+[![Release](https://img.shields.io/github/v/release/SanHsien/chatgpt-sidebar?sort=semver&display_name=tag)](https://github.com/SanHsien/chatgpt-sidebar/releases/latest)
 [![Platform](https://img.shields.io/badge/Platform-Chrome-lightgrey.svg)](#installation)
 [![CI](https://github.com/SanHsien/chatgpt-sidebar/actions/workflows/ci.yml/badge.svg)](https://github.com/SanHsien/chatgpt-sidebar/actions/workflows/ci.yml)
 
-Embed ChatGPT in Chrome’s side panel and one-click insert a **Traditional Chinese** summarisation prompt built from the **current tab URL**.
+**Bring the current page or selected text into your own signed-in ChatGPT session without leaving the page.**
 
-This extension has **no backend and does not host API keys**. Summaries rely on your own ChatGPT session and the ChatGPT web UI.
+ChatGPT Sidebar is a frontend-only Chrome Manifest V3 extension. It does not run its own AI backend and does not host API keys; it uses your existing ChatGPT browser session.
+
+[Latest release](https://github.com/SanHsien/chatgpt-sidebar/releases/latest) · [Privacy policy](https://sanhsien.github.io/chatgpt-sidebar/privacy.html) · [Security and technical risks](NOTICE.md)
+
+## What it does
+
+| Action | Behavior |
+| --- | --- |
+| Summarize | Builds a Traditional Chinese summary prompt from the current page URL, title, and optionally visible text |
+| Translate | Builds a translation prompt from the current selection |
+| Explain | Builds an explanation prompt from the current selection |
+| Outline | Builds an outline prompt from visible content on the current page |
+
+It also supports:
+
+- ChatGPT directly inside Chrome Side Panel.
+- Session checks that distinguish signed-out and blocked-loading states.
+- Editable prompt templates for every action.
+- Optional visible-page text and focus-after-insert behavior.
+- Settings stored in `chrome.storage.sync`.
+- Prompt insertion without automatic submission: **you review and send the prompt yourself**.
+
+## How it works
+
+```text
+Current page / selected text
+          │
+          ▼
+Chrome Side Panel
+          │
+          ├─ Summarize / Translate / Explain / Outline
+          │
+          ▼
+Build prompt locally
+          │
+          ▼
+Insert into your signed-in ChatGPT input
+          │
+          ▼
+You decide whether to send it
+```
+
+There is no hosted backend operated by this project and no project server that receives your OpenAI / ChatGPT credentials.
+
+## Privacy and security boundaries
+
+### Page content
+
+The extension reads the current page URL, title, selection, or visible text only when needed for an action. That content is **not uploaded to a server operated by this project because this project has no backend**.
+
+However, if you review and submit the generated prompt, any included page content is then sent through ChatGPT according to ChatGPT / OpenAI's own service behavior. “No project backend” does **not** mean the content can never leave your browser.
+
+### iframe embedding risk
 
 > [!IMPORTANT]
-> To load ChatGPT inside a side-panel iframe, the extension strips `Content-Security-Policy` and `X-Frame-Options` from ChatGPT domain responses. That weakens clickjacking protection—use only in a trusted local environment. See [`NOTICE.md`](NOTICE.md).
+> To load ChatGPT inside the side-panel iframe, the current implementation removes `Content-Security-Policy` and `X-Frame-Options` from responses on ChatGPT domains. This weakens the site's anti-framing / clickjacking protections. **Use it only in a local browser environment you trust.**
 
-## Features
-
-- **Embedded ChatGPT in the side panel**: toolbar icon opens Chrome Side Panel with ChatGPT in an iframe.
-- **Session check**: requests ChatGPT `/api/auth/session` before embedding, with retry for signed-out / Cloudflare states.
-- **Multiple actions**: summarize, translate selection, explain selection, outline; each has an editable prompt template.
-- **Optional page text**: on run, reads visible page text / selection locally (not uploaded to this project). See privacy section in [`NOTICE.md`](NOTICE.md).
-- **Settings**: origin, include-page-text, focus-after-insert, per-action templates in `chrome.storage.sync`.
-- **Existing session**: reuses your ChatGPT browser session when available.
+See [`NOTICE.md`](NOTICE.md) and [`SECURITY.md`](SECURITY.md) for permissions, CSP/XFO, privacy, and third-party-service boundaries.
 
 ## Installation
 
-### Option A: Download a Release (recommended)
+### Download a Release (recommended)
 
-1. Download `chatgpt-sidebar-<version>.zip` from [Releases](https://github.com/SanHsien/chatgpt-sidebar/releases) (e.g. [v0.5.10](https://github.com/SanHsien/chatgpt-sidebar/releases/tag/v0.5.10)).
-2. Unzip to get the `chatgpt-sidebar-<version>` folder.
-3. Open Chrome → `chrome://extensions/` → enable **Developer mode**.
-4. Click **Load unpacked** and select that folder.
-5. Optionally verify the zip with the accompanying `.sha256` file.
+1. Download `chatgpt-sidebar-<version>.zip` from the [Latest Release](https://github.com/SanHsien/chatgpt-sidebar/releases/latest).
+2. Unzip it.
+3. Open `chrome://extensions/` and enable **Developer mode**.
+4. Choose **Load unpacked** and select the extracted folder.
+5. Releases also include a `.sha256` file for download verification.
 
-### Option B: Load from source
+GitHub Releases are currently the primary distribution path. See [`ROADMAP.md`](ROADMAP.md) and [`docs/STORE.md`](docs/STORE.md) for Chrome Web Store status and publishing work.
 
-1. Clone or download this repository.
-2. Optionally run `node tools/pack-extension.mjs` to build `dist/`.
-3. Open Chrome → `chrome://extensions/` → **Developer mode** → **Load unpacked**.
-4. Select the repo root, or `dist/chatgpt-sidebar-<version>`.
-5. The extension icon should appear in the toolbar.
+### Load from source
+
+```bash
+git clone https://github.com/SanHsien/chatgpt-sidebar.git
+cd chatgpt-sidebar
+node tools/validate-extension.mjs
+```
+
+Then use **Load unpacked** in `chrome://extensions/` and select the repository root. You can also run `node tools/pack-extension.mjs` to create a clean `dist/` package directory.
 
 ## Usage
 
-1. Click the extension icon to open the side panel; sign in on a ChatGPT tab if needed, then retry.
-2. Switch to the page tab you want (select text first for translate / explain).
-3. Click **摘要** / **翻譯** / **解釋** / **大綱**. The extension reads URL / title / selection or visible text locally, inserts a Traditional Chinese prompt into the chat input for you to review and send.
+1. Click the extension icon to open the side panel.
+2. If ChatGPT is not signed in, sign in in a normal tab and retry from the side panel.
+3. Switch to the page you want to work with; select text first for Translate or Explain.
+4. Choose **Summarize, Translate, Explain, or Outline**.
+5. Review the prompt inserted into ChatGPT, then send it yourself.
 
-## Project layout
+## Development and validation
 
-```text
-.
-├── manifest.json
-├── background.js
-├── panel.html / panel.js
-├── content.js
-├── icons/
-├── tools/
-├── docs/
-├── ROADMAP.md
-├── README.md / README.en.md / CHANGELOG.md / REVIEW.md
-├── AGENTS.md / CLAUDE.md / SKILL.md
-└── NOTICE.md / LICENSE
-```
-
-## Development
+This is a plain-JavaScript MV3 extension with no bundler, no `package.json`, and no backend.
 
 ```bash
 node --check background.js content.js panel.js
 node tools/validate-extension.mjs
 ```
 
-See [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) (dev + troubleshooting), [`ROADMAP.md`](ROADMAP.md), [`NOTICE.md`](NOTICE.md) (privacy + risks), [Privacy Policy](https://sanhsien.github.io/chatgpt-sidebar/privacy.html), [`docs/STORE.md`](docs/STORE.md) (store / Ask Gemini), and [`AGENTS.md`](AGENTS.md).
+CI runs the same syntax and extension-layout checks.
 
-## Security notes
+## Documentation
 
-- Use only on a trusted local machine.
-- Never commit cookies, session state, or secrets.
-- ChatGPT UI changes may break the content-script selectors in `content.js`.
+- [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md): architecture, loading, validation, and troubleshooting
+- [`NOTICE.md`](NOTICE.md): permissions, privacy, CSP/XFO, and third-party risks
+- [`ROADMAP.md`](ROADMAP.md): product direction and Chrome Web Store status
+- [`docs/STORE.md`](docs/STORE.md): store strategy and review work
+- [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md): listing copy and submission checklist
+- [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md): privacy-policy source
+- [`CHANGELOG.md`](CHANGELOG.md): release history
 
-## Other projects for reference
+## License and origin
 
-The following projects are **not** source parents of this repo; they are listed only as related prior art for embedding ChatGPT in a side panel:
-
-| Project | Notes |
-|------|------|
-| [PeterPorzuczek/chatgpt-panel-chrome-extension](https://github.com/PeterPorzuczek/chatgpt-panel-chrome-extension) ([Chrome Web Store](https://chromewebstore.google.com/detail/chatgpt-panel/oakbdpbfmbadiphcepefmkhabehadepk)) | Side-panel iframe embedding, `declarativeNetRequest` CSP/XFO stripping, and `/api/auth/session` checks before load. MIT. This project additionally injects one-click summary prompts and has a different product goal. |
-
-## License
-
-MIT. See [`LICENSE`](LICENSE) and [`NOTICE.md`](NOTICE.md).
+Source code is available under the [MIT License](LICENSE). See [`NOTICE.md`](NOTICE.md) for prior art, third-party-service notices, and provenance. This project is not an official OpenAI / ChatGPT product and is not endorsed by OpenAI.
