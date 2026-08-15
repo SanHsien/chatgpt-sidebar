@@ -1,38 +1,51 @@
 ---
 name: chatgpt-sidebar
-description: 維護 SanHsien/chatgpt-sidebar。Chrome MV3 側邊欄嵌入 ChatGPT，並以一鍵把目前分頁網址組成繁中摘要提示詞寫入聊天輸入框；無後端、不代管 API key。
+description: 維護 SanHsien/chatgpt-sidebar：純 JavaScript Chrome MV3 側邊欄工具，使用使用者既有 ChatGPT 工作階段，把目前頁面／選取文字組成摘要、翻譯、解釋或大綱提示詞；無 hosted backend、不代管 API key。
 ---
 
 # chatgpt-sidebar
 
 ## 何時使用
 
-使用者要維護 `SanHsien/chatgpt-sidebar`，或開發這個 Chrome 側邊欄摘要擴充功能：
+使用者要維護 `SanHsien/chatgpt-sidebar` 時使用，例如：
 
-- 調整 side panel UI、摘要提示詞文案或 iframe 來源網域。
-- 維護 `declarativeNetRequest` 規則（CSP / XFO 移除）。
-- 修復 content script 寫入 ChatGPT 輸入框的選擇器／事件。
-- 更新文件、CI 驗證腳本或 GitHub 協作模板。
+- 調整 Side Panel UI 或提示詞動作。
+- 修復 ChatGPT DOM selector / 提示詞寫入。
+- 維護 session 檢查、tab / frame 訊息傳遞。
+- 調整 MV3 metadata、permissions 或 DNR 規則。
+- 更新 GitHub Release、Chrome Web Store 文件或隱私政策。
 
-## 不適用
+## 核心邊界
 
-- 架後端、代管 OpenAI API key 或使用者對話。
-- 自動大量抓取、繞過付費牆，或未經使用者確認代送訊息。
-- 宣稱 OpenAI / ChatGPT 官方背書。
-- 移除安全風險聲明後對外廣傳。
+- Side Panel 是產品核心，不改成純分頁工具。
+- 不新增 hosted backend，不代管 ChatGPT / OpenAI 憑證。
+- 不自動送出提示詞；由使用者確認後送出。
+- 不做大量抓取、付費牆繞過或存取控制規避。
+- iframe / CSP / X-Frame-Options 風險必須持續公開揭露。
+- 頁面內容雖不送到本專案伺服器，但使用者送出提示詞後會進入 ChatGPT；文件不得混淆兩者。
+
+完整規則以 [`AGENTS.md`](AGENTS.md) 為準。
 
 ## 快速定位
 
-- `README.md` / `README.en.md`：使用者入口。
-- `REVIEW.md`／`NOTICE.md`：覆核；授權／隱私／CSP·XFO 風險。
-- `AGENTS.md`／`CLAUDE.md`：AI 規則（以 AGENTS 為準）。
-- `docs/DEVELOPMENT.md`：架構、載入、排查、選擇器。
-- `docs/STORE.md`：商店與「問問 Gemini」對照。
-- `docs/privacy.html`：Chrome Web Store 用公開隱私權政策（勿用 GitHub blob URL）。
-- `manifest.json`、`background.js`／`panel.js`／`content.js`：核心路徑。
-- `tools/validate-extension.mjs`：驗證。
+- `README.md` / `README.en.md`：產品入口
+- `manifest.json`：MV3 metadata / permissions
+- `background.js`：Side Panel、DNR、tab forwarding
+- `panel.html` / `panel.js`：側邊欄 UI 與 actions
+- `content.js`：ChatGPT DOM / prompt insertion
+- `tools/validate-extension.mjs`：自動驗證
+- `tools/pack-extension.mjs`：Release 封裝
+- `NOTICE.md` / `SECURITY.md`：隱私與安全邊界
+- `docs/DEVELOPMENT.md`：架構與排查
+- `docs/STORE.md` / `docs/STORE_LISTING.md`：Chrome Web Store
+- `ROADMAP.md`：產品方向與商店狀態
 
-## 完成回報
+## 驗證
 
-- 改了哪些檔；是否動到權限／header bypass／訊息傳遞。
-- 跑過哪些驗證；是否需更新 README、NOTICE 或 REVIEW 回註。
+```bash
+node --check background.js content.js panel.js
+node tools/validate-extension.mjs
+git diff --check
+```
+
+涉及 UI、iframe、session、selector 或提示詞寫入時，若環境允許再做 Chrome 手動 smoke，並把未驗證項明確列出。

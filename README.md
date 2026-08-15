@@ -1,93 +1,125 @@
-# ChatGPT Side Panel Summarizer
+# ChatGPT Sidebar
 
 [繁體中文](README.md) | [English](README.en.md)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Manifest](https://img.shields.io/badge/Manifest-V3-blue.svg)](manifest.json)
-[![Release](https://img.shields.io/github/v/release/SanHsien/chatgpt-sidebar?sort=semver&display_name=tag)](https://github.com/SanHsien/chatgpt-sidebar/releases)
+[![Release](https://img.shields.io/github/v/release/SanHsien/chatgpt-sidebar?sort=semver&display_name=tag)](https://github.com/SanHsien/chatgpt-sidebar/releases/latest)
 [![Platform](https://img.shields.io/badge/Platform-Chrome-lightgrey.svg)](#安裝)
 [![CI](https://github.com/SanHsien/chatgpt-sidebar/actions/workflows/ci.yml/badge.svg)](https://github.com/SanHsien/chatgpt-sidebar/actions/workflows/ci.yml)
 
-在 Chrome 側邊欄嵌入 ChatGPT，並用一鍵把**目前分頁網址**組成繁體中文摘要提示詞，寫入聊天輸入框。
+**在瀏覽目前頁面的同時，把頁面／選取文字快速帶進自己已登入的 ChatGPT 側邊欄。**
 
-本擴充功能**無後端、不代管 API key**；摘要能力依賴你自己的 ChatGPT 登入態與網頁介面。
+ChatGPT Sidebar 是一個純前端 Chrome Manifest V3 擴充功能。它不提供自己的 AI 後端，也不代管 API key；你仍使用瀏覽器裡自己的 ChatGPT 工作階段。
+
+[下載最新版](https://github.com/SanHsien/chatgpt-sidebar/releases/latest) · [隱私權政策](https://sanhsien.github.io/chatgpt-sidebar/privacy.html) · [安全與技術風險](NOTICE.md)
+
+## 能做什麼
+
+| 動作 | 行為 |
+| --- | --- |
+| 摘要 | 把目前頁面網址、標題與可選的可見文字組成繁中摘要提示詞 |
+| 翻譯 | 把目前選取文字組成翻譯提示詞 |
+| 解釋 | 把目前選取文字組成說明／解釋提示詞 |
+| 大綱 | 以目前頁面的可見內容組成大綱提示詞 |
+
+另外支援：
+
+- 直接在 Chrome Side Panel 內顯示 ChatGPT。
+- 檢查目前 ChatGPT 登入工作階段，區分未登入與載入受阻狀態。
+- 自訂每個動作的提示詞模板。
+- 選擇是否附上頁面可見文字、寫入後是否聚焦輸入框。
+- 設定保存在 `chrome.storage.sync`。
+- 提示詞只先寫入 ChatGPT 輸入框，**不會由擴充功能自動送出**；你可以先檢查再傳送。
+
+## 怎麼運作
+
+```text
+目前網頁／選取文字
+        │
+        ▼
+Chrome Side Panel
+        │
+        ├─ 摘要／翻譯／解釋／大綱
+        │
+        ▼
+本機組成提示詞
+        │
+        ▼
+寫入你已登入的 ChatGPT 輸入框
+        │
+        ▼
+由你確認是否送出
+```
+
+沒有本專案的 hosted backend，也沒有把 OpenAI / ChatGPT 憑證交給本專案伺服器的流程。
+
+## 隱私與安全邊界
+
+### 頁面內容
+
+擴充功能只在你執行動作時讀取目前分頁需要的網址、標題、選取文字或可見文字。這些內容**不會上傳到本專案自己的伺服器，因為本專案沒有後端**。
+
+但如果你確認並送出已產生的提示詞，提示詞中的頁面內容就會依 ChatGPT 本身的服務流程傳送給 ChatGPT / OpenAI。不要把「沒有本專案後端」理解成「內容永遠不離開瀏覽器」。
+
+### iframe 嵌入風險
 
 > [!IMPORTANT]
-> 為了讓 ChatGPT 能在側邊欄 iframe 載入，擴充功能會移除 ChatGPT 網域回應中的 `Content-Security-Policy` 與 `X-Frame-Options`。這會削弱 clickjacking 防護，請只在信任的本機環境使用。細節見 [`NOTICE.md`](NOTICE.md)。
+> 為了讓 ChatGPT 能在側邊欄 iframe 載入，目前實作會針對 ChatGPT 網域移除回應中的 `Content-Security-Policy` 與 `X-Frame-Options`。這會削弱原網站的 anti-framing / clickjacking 防護。**只建議在你信任的本機瀏覽器環境使用。**
 
-## 功能
-
-- **側邊欄嵌入 ChatGPT**：工具列圖示開啟 Chrome Side Panel，以 iframe 載入 ChatGPT。
-- **登入態檢查**：載入前請求 ChatGPT `/api/auth/session`，區分已登入、未登入與 Cloudflare 阻擋，並提供重試。
-- **多動作**：摘要、翻譯選取、解釋選取、產生大綱；各自動作有可編輯提示詞模板。
-- **頁面可見文字（可關）**：執行時於本機讀取目前分頁可見文字／選取（需 `http(s)://*/*` 主機權限；不上傳到本專案伺服器）。見 [`NOTICE.md`](NOTICE.md)「隱私」。
-- **可設定**：網域、是否附內文、寫入後是否聚焦、各動作模板；存於 Chrome 同步儲存。
-- **沿用既有登入**：若瀏覽器已登入 ChatGPT，嵌入畫面會沿用該工作階段；未登入則引導你先在分頁完成登入。
+完整權限、CSP/XFO、隱私與第三方服務邊界見 [`NOTICE.md`](NOTICE.md) 與 [`SECURITY.md`](SECURITY.md)。
 
 ## 安裝
 
-### 方法一：下載 Release（推薦）
+### 下載 Release（推薦）
 
-1. 到 [Releases](https://github.com/SanHsien/chatgpt-sidebar/releases) 下載 `chatgpt-sidebar-<版本>.zip`（例如 [v0.5.10](https://github.com/SanHsien/chatgpt-sidebar/releases/tag/v0.5.10)）。
-2. 解壓後得到 `chatgpt-sidebar-<版本>` 資料夾。
-3. Chrome 開啟 `chrome://extensions/` → 開啟**開發人員模式**。
-4. 點**載入未封裝項目**，選擇該資料夾。
-5. 可用同目錄的 `.sha256` 檔驗證 zip 完整性。
+1. 從 [Latest Release](https://github.com/SanHsien/chatgpt-sidebar/releases/latest) 下載 `chatgpt-sidebar-<version>.zip`。
+2. 解壓縮。
+3. 開啟 `chrome://extensions/`，啟用**開發人員模式**。
+4. 選擇**載入未封裝項目**，指定解壓後資料夾。
+5. Release 同時提供 `.sha256`，可用來核對下載檔案。
 
-### 方法二：從原始碼載入
+目前主要發行方式是 GitHub Release；Chrome Web Store 狀態與上架工作見 [`ROADMAP.md`](ROADMAP.md) 與 [`docs/STORE.md`](docs/STORE.md)。
 
-1. Clone 或下載本 repository。
-2. （可選）`node tools/pack-extension.mjs` 產生 `dist/` 發行目錄。
-3. Chrome → `chrome://extensions/` → 開發人員模式 → **載入未封裝項目**。
-4. 選 repo 根目錄，或 `dist/chatgpt-sidebar-<版本>`。
-5. 工具列應出現擴充功能圖示。
+### 從原始碼載入
+
+```bash
+git clone https://github.com/SanHsien/chatgpt-sidebar.git
+cd chatgpt-sidebar
+node tools/validate-extension.mjs
+```
+
+接著在 `chrome://extensions/` 以**載入未封裝項目**選擇 repo 根目錄。也可執行 `node tools/pack-extension.mjs` 產生乾淨的 `dist/` 發行目錄。
 
 ## 使用
 
-1. 點擴充功能圖示，開啟側邊欄；必要時依提示在分頁登入 ChatGPT 後按「重試／檢查」。
-2. 切到要處理的網頁分頁（翻譯／解釋請先選取文字）。
-3. 點**摘要**／**翻譯**／**解釋**／**大綱**（翻譯／解釋請先選取文字；大綱用頁面可見全文，不需選取）。擴充功能會本機讀取網址／標題／選取或可見文字，組成提示詞寫入 ChatGPT 輸入框，由你確認後送出。缺選取或讀取失敗時會顯示說明條。
-
-## 專案結構
-
-```text
-.
-├── manifest.json          # MV3 宣告
-├── background.js          # service worker：DNR 規則、側邊欄行為、分頁轉發
-├── panel.html / panel.js  # 側邊欄 UI、iframe、摘要按鈕（postMessage）
-├── content.js             # 在 ChatGPT 頁面寫入提示詞
-├── icons/                 # 擴充功能圖示
-├── tools/                 # 驗證腳本
-├── docs/                  # DEVELOPMENT／STORE／DECISIONS
-├── ROADMAP.md             # 產品路線圖
-├── README.md / README.en.md / CHANGELOG.md / REVIEW.md
-├── AGENTS.md / CLAUDE.md / SKILL.md
-└── NOTICE.md / LICENSE
-```
+1. 點擴充功能圖示開啟側邊欄。
+2. 若尚未登入 ChatGPT，先依畫面提示在一般分頁登入，再回側邊欄重試。
+3. 切換到要處理的網頁；使用翻譯／解釋時先選取文字。
+4. 點選**摘要、翻譯、解釋或大綱**。
+5. 檢查寫入 ChatGPT 的提示詞，再自行送出。
 
 ## 開發與驗證
+
+這是一個無 bundler、無 `package.json`、無後端的純 JavaScript MV3 extension。
 
 ```bash
 node --check background.js content.js panel.js
 node tools/validate-extension.mjs
 ```
 
-開發／排查見 [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)。路線圖見 [`ROADMAP.md`](ROADMAP.md)。隱私與風險見 [`NOTICE.md`](NOTICE.md)、[隱私權政策（公開頁）](https://sanhsien.github.io/chatgpt-sidebar/privacy.html)。商店挑戰上架見 [`docs/STORE.md`](docs/STORE.md)、[`docs/STORE_LISTING.md`](docs/STORE_LISTING.md)。
+CI 會執行相同的語法與 extension layout 驗證。
 
-## 安全注意
+## 文件
 
-- 本工具只應在本機、受信任環境使用。
-- 不要把 cookies、登入態或私密憑證提交進版控。
-- ChatGPT UI 改版可能讓 content script 選取器失效；屆時需更新 `content.js`。
+- [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)：架構、載入、驗證與排查
+- [`NOTICE.md`](NOTICE.md)：權限、隱私、CSP/XFO 與第三方風險
+- [`ROADMAP.md`](ROADMAP.md)：產品方向與 Chrome Web Store 狀態
+- [`docs/STORE.md`](docs/STORE.md)：商店策略與審核工作
+- [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md)：上架文案與操作清單
+- [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md)：隱私權政策來源
+- [`CHANGELOG.md`](CHANGELOG.md)：版本歷史
 
-## 其他可參考專案
+## 授權與來源
 
-下列專案與本 repo **無程式碼衍生關係**，僅作側邊欄嵌入 ChatGPT 的實作參考：
-
-| 專案 | 說明 |
-|------|------|
-| [PeterPorzuczek/chatgpt-panel-chrome-extension](https://github.com/PeterPorzuczek/chatgpt-panel-chrome-extension)（[Chrome Web Store](https://chromewebstore.google.com/detail/chatgpt-panel/oakbdpbfmbadiphcepefmkhabehadepk)） | 側邊欄 iframe 嵌入 ChatGPT、`declarativeNetRequest` 移除 CSP／XFO、載入前檢查 `/api/auth/session`。MIT。本專案另有一鍵摘要提示詞注入，產品目標不同。 |
-
-## 授權
-
-MIT。見 [`LICENSE`](LICENSE) 與 [`NOTICE.md`](NOTICE.md)。
+程式碼採 [MIT License](LICENSE)。相關 prior art、第三方服務聲明與來源說明見 [`NOTICE.md`](NOTICE.md)。本專案不是 OpenAI / ChatGPT 官方產品，也未獲官方背書。

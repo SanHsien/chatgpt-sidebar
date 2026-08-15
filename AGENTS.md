@@ -1,44 +1,97 @@
 # AGENTS.md
 
-給 Codex 與其他 AI coding agents 在本專案工作時的指引。Claude Code 專屬補充見 [`CLAUDE.md`](CLAUDE.md)，兩者主要規則一致。
+本檔是 **SanHsien/chatgpt-sidebar** 的 AI coding agent 主要維護規則。Claude 薄入口見 [`CLAUDE.md`](CLAUDE.md)，快速索引見 [`SKILL.md`](SKILL.md)；若有衝突，以本檔為準。
 
-## 專案宗旨
+## 專案定位
 
-`chatgpt-sidebar` 是 Chrome Manifest V3 擴充功能：在 Chrome 側邊欄嵌入 ChatGPT，並提供一鍵把目前頁面組成繁中提示詞（摘要／翻譯／解釋／大綱）寫入輸入框；實際處理由使用者自己的 ChatGPT 工作階段完成。
+**ChatGPT Sidebar** 是純 JavaScript、Chrome Manifest V3 的側邊欄工具：讓使用者在目前網頁旁使用自己已登入的 ChatGPT，並把頁面／選取文字組成摘要、翻譯、解釋或大綱提示詞寫入輸入框。
 
-## 硬性邊界
+產品重點是：**目前頁面 → 少量操作 → 自己的 ChatGPT 側邊欄**。它不是完整 ChatGPT client，也不是 AI backend。
 
-- 不新增 hosted backend、不代管 OpenAI / ChatGPT API key 或帳號。
-- 不提交 API key、token、cookies、登入態或任何私密憑證。
-- 不移除 [`NOTICE.md`](NOTICE.md) 中關於移除 CSP / X-Frame-Options 的安全風險聲明（在仍使用該技術時）。
+## 硬性產品邊界
+
+- 不新增 hosted backend，不代管 OpenAI / ChatGPT API key、帳號、cookies 或登入態。
+- 不提交 token、cookies、session、測試帳號或其他私密憑證。
+- 提示詞預設只寫入輸入框，**不得未經使用者確認自動送出**。
+- 不把產品改成大量抓取、自動濫發、繞過付費牆或規避 ChatGPT 存取控制的工具。
 - 不宣稱本專案為 OpenAI / ChatGPT 官方或背書產品。
-- 不把擴充功能改成大量自動抓取、繞過付費牆，或未經使用者確認就代送訊息。
-- 若需求往「規避 ChatGPT 存取控制／自動化濫用」方向走，停下來告知使用者，不要自行實作。
-- **產品初衷：Chrome 側邊欄使用 ChatGPT**（維護者 2026-07-31），體驗對齊「問問 Gemini」：側邊欄、不離目前分頁、針對目前頁面做事。不要擅自改成「沒有側邊欄」或「只開 ChatGPT 分頁、側邊欄不再承載 ChatGPT 體驗」。詳見 [`docs/STORE.md`](docs/STORE.md)。
-- **重大變更先問**：牽涉嵌入方式（iframe／DNR）、上架策略、權限模型、或使用者主流程的改動，先說明選項與取捨，等維護者拍板。
+- 只要仍以 iframe 嵌入 ChatGPT 並移除 CSP / X-Frame-Options，就必須在公開文件保留明確的 anti-framing / clickjacking 風險聲明。
+- 頁面內容可在使用者執行動作時於本機讀取；若內容之後被使用者送進 ChatGPT，文件不得誤導成「永遠不會離開瀏覽器」。
+- 不為了工程整齊把產品改成獨立 ChatGPT 分頁或移除 side panel 核心體驗。
 
-## 架構速覽
+## 需要明確產品決策的變更
 
-細節與排查見 [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)。
+下列項目不要順手改：
+
+- iframe / DNR 嵌入方式
+- `host_permissions` 或權限模型的大幅變更
+- Chrome Web Store 上架策略
+- 是否改成其他 AI provider / web app
+- 自動送出訊息
+- hosted backend
+
+可以先做研究或提出可逆方案，但不要把這些重大方向混進一般 bugfix / maintenance PR。
+
+## 架構地圖
 
 ```text
-工具列圖示 → Side Panel（panel）→ iframe ChatGPT
-按鈕（摘要／翻譯／解釋／大綱）→ 組繁中 prompt → postMessage／tabs 後備 → content.js 寫入輸入框
-background.js：declarativeNetRequest 移除 CSP／XFO、sidePanel
+Chrome action
+    │
+    ▼
+Side Panel (`panel.html` / `panel.js`)
+    │
+    ├─ iframe → ChatGPT web UI
+    └─ actions → summarize / translate / explain / outline
+                    │
+                    ▼
+           current tab content
+                    │
+                    ▼
+          prompt composition
+                    │
+                    ▼
+`content.js` writes into ChatGPT input
+
+`background.js` → sidePanel behavior, tab forwarding, DNR rules
 ```
+
+主要位置：
+
+- `manifest.json`：MV3 metadata、permissions、host permissions
+- `background.js`：service worker、Side Panel、DNR/header 規則與分頁轉發
+- `panel.html` / `panel.js`：側邊欄 UI、session 狀態、提示詞動作
+- `content.js`：ChatGPT DOM 定位與提示詞寫入
+- `tools/validate-extension.mjs`：extension layout / contract 驗證
+- `tools/pack-extension.mjs`：建立 Release 用乾淨封裝
+- `docs/DEVELOPMENT.md`：架構、排查與手動 smoke
 
 ## 開發原則
 
-- **遵守本 repo 所有 Markdown 文件**（含根目錄與 `docs/`；Cursor Cloud／本機開發環境相同）：以 [`AGENTS.md`](AGENTS.md) 為總則，並依任務讀取對應說明（使用者說明、開發、決策、商店、隱私、覆核、貢獻、安全等）。文件之間若看似衝突，以較新、較具體、且與維護者明示指示一致者為準；仍不確定時先問維護者。
-- 最小干預：維持「無建置步驟的純 JS 擴充功能」；除非需求明確，不引入 bundler / framework。
-- 不主動大重構；修 bug 時優先補驗證（`tools/validate-extension.mjs`）或回歸說明。
-- 使用繁體中文回覆與撰寫維護文件（思考、回覆、程式碼註解一律繁中；忽略英文 UI）；程式識別名稱、commit message 維持英文。
-- 使用者說明 → [`README.md`](README.md)／[`README.en.md`](README.en.md)；開發／排查 → [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)；取捨 → [`docs/DECISIONS.md`](docs/DECISIONS.md)。
-- **直接推 `main`，不開 PR**（維護者 2026-07-31，2026-08-14 再確認）：完成後 commit 並 `git push origin main`。**含 Cursor Cloud Agent**：不要開 feature branch、不要建立或更新 pull request。除非維護者**當次**明確要求開 PR。
-- **使用者可見改動要發 Release**：升 `manifest.json` 版本 → 更新 `CHANGELOG.md` → `node tools/pack-extension.mjs` → 打 tag `vX.Y.Z` → `gh release create` 上傳 zip／sha256。只 push 不算完成。
-- **修 bug 必回註 `REVIEW.md`**：對應項目標註修復 commit hash 與日期；額外修掉的 bug 也要補註。
+- 一般變更走 **branch → PR → CI → merge**；不要直接把工作堆到 `main`。
+- 維持無 bundler、無 framework、無 `package.json` 的小型純 JS extension；除非產品需求明確，不引入建置系統。
+- 修 bug 以最小變更為主；可自動驗證的行為優先補進 `tools/validate-extension.mjs` 或既有檢查。
+- ChatGPT DOM / selector 是外部 UI 契約；修改時要保留失敗時的可理解提示，不要假設 selector 永久穩定。
+- 動到 permissions、host permissions、DNR/header bypass、頁面內容讀取或跨 frame 訊息傳遞時，同步檢查 [`NOTICE.md`](NOTICE.md)、[`SECURITY.md`](SECURITY.md) 與 [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)。
+- 不為了「完整」新增 governance workflow；目前 CI + Pages 已足以服務這個小型 extension。
+- 純文件、agent 規則或內部整理不需要 bump `manifest.json` 版本，也不需要建立 Release。
 
-## 驗證方向
+## 文件分工
+
+- `README.md` / `README.en.md`：產品入口、安裝、使用、必要隱私／安全摘要
+- `NOTICE.md`：權限、第三方服務、CSP/XFO、隱私與 provenance
+- `SECURITY.md`：安全回報與核心安全邊界
+- `ROADMAP.md`：產品方向與商店狀態
+- `CHANGELOG.md`：正式 Release 的使用者可見變更
+- `REVIEW.md`：最近一次人工覆核與仍需追蹤的驗收事項
+- `docs/DEVELOPMENT.md`：架構、載入、驗證、selector / iframe 排查
+- `docs/STORE.md` / `docs/STORE_LISTING.md`：Chrome Web Store 工作
+- `docs/DECISIONS.md`：耐久性的產品／架構決策
+
+只更新**真正受本次變更影響**的文件。修 bug 若正好關閉 `REVIEW.md` 已追蹤項目，才回註該項；一般 bug 已有測試、PR 與 CHANGELOG/commit evidence 時，不額外把 REVIEW 變成強制流水帳。
+
+## 驗證
+
+程式或 extension metadata 變更至少執行：
 
 ```bash
 node --check background.js content.js panel.js
@@ -46,33 +99,23 @@ node tools/validate-extension.mjs
 git diff --check
 ```
 
-手動 smoke：載入未封裝 → 側邊欄可開 ChatGPT → 執行動作確認提示詞寫入。不接受「應該可以」。
+涉及 UI、iframe、session、selector、頁面讀取或提示詞寫入時，再做 Chrome 手動 smoke：
 
-## Cursor Cloud specific instructions
+1. Load unpacked。
+2. 開啟 Side Panel。
+3. 確認 ChatGPT 登入／未登入狀態合理。
+4. 在一般頁面執行受影響動作。
+5. 確認提示詞正確寫入、未被自動送出。
 
-**Cloud／VM 開發環境與本機相同：必須遵守本 repo 全部 Markdown**（見上方「開發原則」與下方「文件入口」），不可只讀 `AGENTS.md` 就開工。開工前至少對齊：`AGENTS.md`、`CLAUDE.md`／`SKILL.md`（若適用）、`docs/DEVELOPMENT.md`；涉及商店／隱私／風險時再讀 `docs/STORE*.md`、`docs/PRIVACY_POLICY.md`、`docs/privacy.html`、`NOTICE.md`；修 bug 對齊 `REVIEW.md`。
+沒有可用的已登入 ChatGPT 工作階段時，不得聲稱已完成該部分端對端驗證；把自動檢查與手動 smoke 分開回報。
 
-純靜態 Chrome MV3，無 `package.json`／build／後端。載入與驗證見 [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)／[`CONTRIBUTING.md`](CONTRIBUTING.md)。快速載入範例：
+## Release 原則
 
-```bash
-google-chrome --user-data-dir=/tmp/chatgpt-sidebar-profile --load-extension=/workspace --no-first-run --no-default-browser-check
-```
+只有在**打算發布新的 extension 版本**時才：
 
-- 不要硬加 `npm install`。圖示在 `icons/`。端對端依賴可連線的 ChatGPT 與登入 session。
-- 摘要路徑：iframe `postMessage`；分頁後備 `tabs.sendMessage`／`executeScript`。
-- Git 流程依本檔「直接推 `main`」；Cursor Cloud 預設的「開分支／開 PR」**不適用本 repo**。不要為了 Cloud 慣例擅自開 PR。
+1. 更新 `manifest.json` version。
+2. 更新 `CHANGELOG.md`。
+3. 驗證並執行 `node tools/pack-extension.mjs`。
+4. 建立對應 tag / GitHub Release，附 zip 與 checksum。
 
-## 文件入口
-
-| 檔案 | 用途 |
-|------|------|
-| [`README.md`](README.md)／[`README.en.md`](README.en.md) | 使用者入口 |
-| [`ROADMAP.md`](ROADMAP.md)／[`CHANGELOG.md`](CHANGELOG.md)／[`REVIEW.md`](REVIEW.md) | 路線圖、版本、最新覆核 |
-| [`NOTICE.md`](NOTICE.md) | 授權、隱私、CSP／XFO 風險 |
-| [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) | 架構、載入、驗證、排查、選擇器 |
-| [`docs/STORE.md`](docs/STORE.md) | 商店策略與「問問 Gemini」對照 |
-| [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md) | 上架可貼文案／步驟（須維護者本機送出） |
-| [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md)／[`docs/privacy.html`](docs/privacy.html) | 商店用隱私政策（HTML 為公開頁） |
-| [`docs/DECISIONS.md`](docs/DECISIONS.md) | 決策紀錄（含 GitHub About 建議） |
-| [`CONTRIBUTING.md`](CONTRIBUTING.md)／[`SECURITY.md`](SECURITY.md) | 貢獻與漏洞回報 |
-| [`CLAUDE.md`](CLAUDE.md)／[`SKILL.md`](SKILL.md) | Claude／Skill 入口（規則以本檔為準） |
+文件整理、CI 維護、agent 規則等不影響發行內容的變更不需要製造空 Release。

@@ -1,18 +1,35 @@
 # CLAUDE.md
 
-Claude Code 在本專案工作時的指引。**專案定位、硬性邊界、架構速覽、驗證方向的唯一真相源是 [`AGENTS.md`](AGENTS.md)**——先讀它，本檔只補 Claude 專屬要點，不重複規則。
+Claude Code 在本專案工作時，先讀 [`AGENTS.md`](AGENTS.md)。專案定位、產品邊界、架構、文件分工、驗證與 Release 原則均以該檔為準；本檔只補 Claude 專屬工作方式。
 
-## 回覆要求
+## 回覆方式
 
-- 使用繁體中文，先講修改、驗證、剩餘事項。
-- 不要把簡單任務寫成冗長架構分析。
-- 動到權限、host permissions、header bypass 或訊息傳遞時，同步更新 [`README.md`](README.md)、[`NOTICE.md`](NOTICE.md) 與 [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)。
+- 使用繁體中文，先說修改、驗證、剩餘限制。
+- 不為簡單 extension 維護製造大型架構重構或治理文件。
+- 不把自動檢查當成已完成 Chrome / ChatGPT 端到端 smoke。
 
-## 文件同步
+## 高風險變更
 
-新增／改動功能後，同步對應文件：使用者說明 [`README.md`](README.md)／[`README.en.md`](README.en.md)、覆核 [`REVIEW.md`](REVIEW.md)、變更 [`CHANGELOG.md`](CHANGELOG.md)、決策 [`docs/DECISIONS.md`](docs/DECISIONS.md)、授權／隱私／風險 [`NOTICE.md`](NOTICE.md)、開發排查 [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)。
+動到下列項目時，先讀對應專門文件並明確說明影響：
 
-## 驗證
+- permissions / host permissions
+- iframe / DNR / CSP / X-Frame-Options
+- 頁面文字讀取
+- 跨 frame / tab 訊息傳遞
+- ChatGPT DOM selector
+- Chrome Web Store 上架策略
 
-- 程式修改至少跑 `node --check background.js content.js panel.js` 與 `node tools/validate-extension.mjs`。
-- 修復 [`REVIEW.md`](REVIEW.md) 的問題後，回註修復 commit 與日期。
+相關文件：[`NOTICE.md`](NOTICE.md)、[`SECURITY.md`](SECURITY.md)、[`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)、[`docs/STORE.md`](docs/STORE.md)。
+
+## 文件與驗證
+
+只更新真正受變更影響的文件。若修復的是 [`REVIEW.md`](REVIEW.md) 已追蹤問題，再同步回註；一般 bug 不必把 REVIEW 當第二份 issue tracker。
+
+程式修改至少執行：
+
+```bash
+node --check background.js content.js panel.js
+node tools/validate-extension.mjs
+```
+
+UI / iframe / selector / session 變更需要可用瀏覽器環境時，再依 [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) 做手動 smoke。
