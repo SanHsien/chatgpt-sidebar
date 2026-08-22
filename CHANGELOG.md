@@ -4,6 +4,7 @@
 
 ## Unreleased
 
+- **安全性**：`panel.js` 的兩個 `postMessage` 監聽（ping／插入結果回報）補上來源比對。原本只驗 `data.source`、`action` 與 `requestId`，沒有比對 `event.source`；現在只認送出請求的那個 iframe，其他 frame 或 opener 的訊息直接落地。由本次新增的 CodeQL 掃描指出（`js/missing-origin-check`，medium×2）。
 - **商店**：Chrome Web Store 因隱私權政策連結無效拒絕（Purple Nickel，2026-08-02）。改以靜態 HTML 公開頁 [`docs/privacy.html`](docs/privacy.html)（GitHub Pages），勿再用 GitHub blob／raw／jsDelivr。重送步驟見 [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md)。
 
 ## v0.5.10

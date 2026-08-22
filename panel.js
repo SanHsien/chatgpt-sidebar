@@ -275,6 +275,9 @@ function pingFrame(frame, timeoutMs = 600) {
       resolve(ok);
     };
     const onMessage = (event) => {
+      // 只認這個 iframe 送回來的訊息。requestId 猜不到，但比對 event.source
+      // 是免費且更精準的把關：任何其他 frame 或 opener 都直接落地。
+      if (event.source !== frame.contentWindow) return;
       const data = event.data;
       if (!data || data.source !== MESSAGE_SOURCE || data.action !== 'pong') return;
       if (data.requestId !== requestId) return;
@@ -314,6 +317,8 @@ function postPromptToFrame(frame, prompt, focusAfterInsert) {
     };
 
     const onMessage = (event) => {
+      // 同 ping：回覆必須來自我們送出請求的那個 frame。
+      if (event.source !== frame.contentWindow) return;
       const data = event.data;
       if (!data || data.source !== MESSAGE_SOURCE || data.action !== 'insert_prompt_result') {
         return;
