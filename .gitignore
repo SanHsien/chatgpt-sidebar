@@ -1,0 +1,43 @@
+# Dependencies（若日後加入 npm 建置）
+node_modules/
+
+# Secrets / env（絕不提交）
+.env
+.env.*
+!.env.example
+
+# Build / packaging
+dist/
+build/
+*.crx
+*.pem
+*.zip
+!docs/**/*.zip
+dependency-freshness-report.md
+
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test / coverage / 維護工具輸出
+coverage/
+.nyc_output/
+dependency-freshness-report.md
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 本機暫存
+tmp/
+temp/
+*.tmp
