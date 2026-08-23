@@ -67,7 +67,7 @@ Side Panel (`panel.html` / `panel.js`)
 
 ## 開發原則
 
-- 一般變更直接推 `origin/main`，不開功能分支、不開維護 PR（主人 2026-08-22 指示）。只有在需要他人審查、或改動風險高到值得先讓 CI 在 PR 上跑一輪時，才退回 **branch → PR → CI → merge**。
+- 一般變更直接推 `origin/main`，不開功能分支、不開維護 PR（2026-08-22 起）。只有在需要他人審查、或改動風險高到值得先讓 CI 在 PR 上跑一輪時，才退回 **branch → PR → CI → merge**。
 - 維持無 bundler、無 framework、無 `package.json` 的小型純 JS extension；除非產品需求明確，不引入建置系統。
 - 修 bug 以最小變更為主；可自動驗證的行為優先補進 `tools/validate-extension.mjs` 或既有檢查。
 - ChatGPT DOM / selector 是外部 UI 契約；修改時要保留失敗時的可理解提示，不要假設 selector 永久穩定。
