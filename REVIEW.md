@@ -2,7 +2,7 @@
 
 ## 結論
 
-`v0.5.10` 仍是商店與 GitHub Release 的發行版：寫入前先清空；附文盡量全文；長文一次 paste。Chrome Web Store 已通過（公開頁見 [`docs/STORE.md`](docs/STORE.md)）；商品詳細說明仍是舊的「摘要當前頁面」文案，須在 Dashboard 改正，不必出新版。`main` 另有未發行的 postMessage 來源比對與逾時文案修正，等維護者決定要發布修補時再 bump／Release。
+`v0.5.10` 仍是商店與 GitHub Release 的發行版：寫入前先清空；附文盡量全文；長文一次 paste。Chrome Web Store 已通過（公開頁見 [`docs/STORE.md`](docs/STORE.md)）。商品詳細說明仍是舊文案，有空再改 Dashboard，不必出新版。`main` 另有未發行的 postMessage 來源比對與逾時文案修正，等決定要發布修補時再 bump／Release。
 
 ## 本機實測（維護者）
 
@@ -12,7 +12,7 @@
 | Notion 等頁翻譯／解釋／大綱 | **v0.5.4** 起有主機權限 |
 | Cloudflare 阻擋 UI | **目前無法測試** |
 | 未來 DOM 改版 | **長期觀測** |
-| Chrome Web Store | **已通過**（v0.5.10）；詳細說明待 Dashboard 更新 |
+| Chrome Web Store | **已通過**（v0.5.10）；詳細說明有空再改 |
 
 ## 已修復（節錄）
 

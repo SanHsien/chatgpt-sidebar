@@ -122,7 +122,7 @@ CI runs the same syntax and extension-layout checks.
 - [`NOTICE.md`](NOTICE.md): permissions, privacy, CSP/XFO, and third-party risks
 - [`ROADMAP.md`](ROADMAP.md): product direction and Chrome Web Store status
 - [`docs/STORE.md`](docs/STORE.md): store strategy and live listing
-- [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md): listing copy (including Dashboard text still to correct)
+- [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md): listing copy (Dashboard text can wait)
 - [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md): privacy-policy source
 - [`CHANGELOG.md`](CHANGELOG.md): release history
 

@@ -9,7 +9,7 @@
 - **操作手冊與可貼文案**：[`STORE_LISTING.md`](STORE_LISTING.md)
 - **隱私政策（上架 URL）**：https://sanhsien.github.io/chatgpt-sidebar/privacy.html （原文 [`PRIVACY_POLICY.md`](PRIVACY_POLICY.md)）
 
-商店商品頁的**詳細說明**仍是舊的「摘要當前頁面」文案，與現況不符。請在 Dashboard 貼上 [`STORE_LISTING.md`](STORE_LISTING.md) 的詳細說明；不需新 zip。Cloud Agent 無法代登 Dashboard。
+商店商品頁的**詳細說明**仍是舊的「摘要當前頁面」文案；可貼文案見 [`STORE_LISTING.md`](STORE_LISTING.md)。不急、不需新 zip。
 
 技術代價（iframe＋移除 CSP／XFO）已在上架材料與 NOTICE 中披露。通過≠無安全代價。
 

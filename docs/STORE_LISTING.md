@@ -6,9 +6,9 @@
 公開頁：https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd
 項目 ID：`kilnbieekgofpkgbhohmogcjkebfflkd`
 
-> Cloud Agent 無法代登 Google Developer Dashboard。商品說明必須你本機貼上。
+> Cloud Agent 無法代登 Google Developer Dashboard。商品說明有空再貼即可，不擋發行。
 
-## 已上架後立刻要改（不需新 zip、不出新版）
+## 有空再改的商品說明（不需新 zip、不出新版）
 
 商店**詳細說明**目前仍是舊文案（只提「摘要當前頁面」、依網址產生提示），與 v0.5 的摘要／翻譯／解釋／大綱不符。英文短句 Overview 第一行已正確。
 

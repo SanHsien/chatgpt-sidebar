@@ -75,7 +75,7 @@ node tools/pack-extension.mjs
 - [`docs/privacy.html`](privacy.html)：商店用公開頁
 - [`docs/PRIVACY_POLICY.md`](PRIVACY_POLICY.md)：Markdown 原文（兩者內容需同步）
 
-不要把 `github.com/.../blob/...` 填進 Dashboard。商店已通過；商品說明待改正見 [`STORE_LISTING.md`](STORE_LISTING.md)。
+不要把 `github.com/.../blob/...` 填進 Dashboard。商店已通過；商品說明有空再改正，見 [`STORE_LISTING.md`](STORE_LISTING.md)。
 
 ## 排查
 

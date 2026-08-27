@@ -23,11 +23,11 @@
 - [x] **v0.3／v0.4**：設定、圖示、選擇器／排查文件、`executeScript` 分頁後備。
 - [x] **v0.5.x**：多動作、頁面內文、寫入穩定性與效能；商店材料與隱私政策。
 - [x] **商店材料**：上架文案與隱私政策（見 [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md)）。
-- [x] **商店上架**：2026-08 通過；公開頁 https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd 。商品詳細說明仍待 Dashboard 改成四動作文案（不需新 zip）。
+- [x] **商店上架**：2026-08 通過；公開頁 https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd 。
 
 ## 之後（非承諾）
 
-- Dashboard 商品詳細說明改成摘要／翻譯／解釋／大綱（見 [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md)）。
+- 有空再把 Dashboard 商品詳細說明改成摘要／翻譯／解釋／大綱（見 [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md)；不需新 zip）。
 - 若決定發布修補：把 `main` 上未發行的 postMessage 來源比對與逾時文案打進 GitHub Release／商店（須 bump 版本）。
 - 更多動作或自訂動作按鈕列。
 - ChatGPT DOM 改版時更新 `content.js` 選擇器（長期觀測）。

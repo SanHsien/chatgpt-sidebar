@@ -122,7 +122,7 @@ CI 會執行相同的語法與 extension layout 驗證。
 - [`NOTICE.md`](NOTICE.md)：權限、隱私、CSP/XFO 與第三方風險
 - [`ROADMAP.md`](ROADMAP.md)：產品方向與 Chrome Web Store 狀態
 - [`docs/STORE.md`](docs/STORE.md)：商店策略與已上架狀態
-- [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md)：商店文案（含 Dashboard 待改正文）
+- [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md)：商店文案（商品說明有空再貼）
 - [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md)：隱私權政策來源
 - [`CHANGELOG.md`](CHANGELOG.md)：版本歷史
 
