@@ -655,7 +655,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       } else if (result.reason === 'timeout' || result.reason === 'tab_timeout') {
         showActionHint(
           '寫入逾時',
-          '寫入 ChatGPT 輸入框過慢。已縮短附文長度；請再試一次，或按「檢查」後重試。'
+          '寫入 ChatGPT 輸入框過慢。請再試一次，或按「檢查」重載聊天畫面後再試。'
         );
       } else if (result.reason === 'no_input') {
         showActionHint('找不到輸入框', '請稍候 ChatGPT 畫面載入完成後再試。');

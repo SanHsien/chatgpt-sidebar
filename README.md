@@ -4,6 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Manifest](https://img.shields.io/badge/Manifest-V3-blue.svg)](manifest.json)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/kilnbieekgofpkgbhohmogcjkebfflkd.svg)](https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd)
 [![Release](https://img.shields.io/github/v/release/SanHsien/chatgpt-sidebar?sort=semver&display_name=tag)](https://github.com/SanHsien/chatgpt-sidebar/releases/latest)
 [![Platform](https://img.shields.io/badge/Platform-Chrome-lightgrey.svg)](#安裝)
 [![CI](https://github.com/SanHsien/chatgpt-sidebar/actions/workflows/ci.yml/badge.svg)](https://github.com/SanHsien/chatgpt-sidebar/actions/workflows/ci.yml)
@@ -12,7 +13,7 @@
 
 ChatGPT Sidebar 是一個純前端 Chrome Manifest V3 擴充功能。它不提供自己的 AI 後端，也不代管 API key；你仍使用瀏覽器裡自己的 ChatGPT 工作階段。
 
-[下載最新版](https://github.com/SanHsien/chatgpt-sidebar/releases/latest) · [隱私權政策](https://sanhsien.github.io/chatgpt-sidebar/privacy.html) · [安全與技術風險](NOTICE.md)
+[下載最新版](https://github.com/SanHsien/chatgpt-sidebar/releases/latest) · [Chrome 線上應用程式商店](https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd) · [隱私權政策](https://sanhsien.github.io/chatgpt-sidebar/privacy.html) · [安全與技術風險](NOTICE.md)
 
 ## 能做什麼
 
@@ -71,15 +72,20 @@ Chrome Side Panel
 
 ## 安裝
 
-### 下載 Release（推薦）
+### Chrome 線上應用程式商店（推薦）
+
+1. 開啟 [ChatGPT Sidebar (Embedded)](https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd)。
+2. 按「加到 Chrome」。
+
+商店目前發行 **v0.5.10**。GitHub Release 仍提供 zip 與 checksum，供核對或 Load unpacked。
+
+### 下載 Release（開發人員模式）
 
 1. 從 [Latest Release](https://github.com/SanHsien/chatgpt-sidebar/releases/latest) 下載 `chatgpt-sidebar-<version>.zip`。
 2. 解壓縮。
 3. 開啟 `chrome://extensions/`，啟用**開發人員模式**。
 4. 選擇**載入未封裝項目**，指定解壓後資料夾。
 5. Release 同時提供 `.sha256`，可用來核對下載檔案。
-
-目前主要發行方式是 GitHub Release；Chrome Web Store 狀態與上架工作見 [`ROADMAP.md`](ROADMAP.md) 與 [`docs/STORE.md`](docs/STORE.md)。
 
 ### 從原始碼載入
 
@@ -115,8 +121,8 @@ CI 會執行相同的語法與 extension layout 驗證。
 - [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)：架構、載入、驗證與排查
 - [`NOTICE.md`](NOTICE.md)：權限、隱私、CSP/XFO 與第三方風險
 - [`ROADMAP.md`](ROADMAP.md)：產品方向與 Chrome Web Store 狀態
-- [`docs/STORE.md`](docs/STORE.md)：商店策略與審核工作
-- [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md)：上架文案與操作清單
+- [`docs/STORE.md`](docs/STORE.md)：商店策略與已上架狀態
+- [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md)：商店文案（含 Dashboard 待改正文）
 - [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md)：隱私權政策來源
 - [`CHANGELOG.md`](CHANGELOG.md)：版本歷史
 

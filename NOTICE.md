@@ -7,7 +7,7 @@ Copyright 2026 SanHsien
 
 ## 專案範圍
 
-`chatgpt-sidebar`（顯示名稱：ChatGPT Side Panel Summarizer）是 Chrome Manifest V3 擴充功能：在 Chrome 側邊欄以 iframe 嵌入 ChatGPT，並提供摘要／翻譯／解釋／大綱等動作，把目前分頁網址、選取或可見文字組成繁中提示詞，寫入嵌入的 ChatGPT 輸入框。
+`chatgpt-sidebar`（顯示名稱：ChatGPT Sidebar (Embedded)）是 Chrome Manifest V3 擴充功能：在 Chrome 側邊欄以 iframe 嵌入 ChatGPT，並提供摘要／翻譯／解釋／大綱等動作，把目前分頁網址、選取或可見文字組成繁中提示詞，寫入嵌入的 ChatGPT 輸入框。
 
 本專案：
 

@@ -1,15 +1,17 @@
 # Chrome Web Store 與「問問 Gemini」對照
 
-更新日期：2026-08-14（維護者指示：**挑戰申請上架**）
+更新日期：2026-08-27
 
 ## 目前發行與上架策略
 
-- **持續**：GitHub Release／Load unpacked
-- **商店**：2026-08-02 因隱私權政策連結無效被拒（Purple Nickel）。已改靜態 HTML 公開頁；重送步驟見 [`STORE_LISTING.md`](STORE_LISTING.md)。通過後再更新 README 商店連結。
+- **商店（已通過）**：https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd （套件 v0.5.10）
+- **並行**：GitHub Release／Load unpacked（zip 與 checksum）
 - **操作手冊與可貼文案**：[`STORE_LISTING.md`](STORE_LISTING.md)
 - **隱私政策（上架 URL）**：https://sanhsien.github.io/chatgpt-sidebar/privacy.html （原文 [`PRIVACY_POLICY.md`](PRIVACY_POLICY.md)）
 
-Cloud Agent 無法代登 Dashboard。技術代價（iframe＋移除 CSP／XFO）已在上架材料中披露。
+商店商品頁的**詳細說明**仍是舊的「摘要當前頁面」文案，與現況不符。請在 Dashboard 貼上 [`STORE_LISTING.md`](STORE_LISTING.md) 的詳細說明；不需新 zip。Cloud Agent 無法代登 Dashboard。
+
+技術代價（iframe＋移除 CSP／XFO）已在上架材料與 NOTICE 中披露。通過≠無安全代價。
 
 ## 一句話對照
 
@@ -18,7 +20,7 @@ Cloud Agent 無法代登 Dashboard。技術代價（iframe＋移除 CSP／XFO）
 | 是什麼 | **Chrome 內建**（Google 一等公民） | 第三方擴充功能 | 多半也是第三方擴充功能 |
 | 側邊欄裡是什麼 | **瀏覽器原生 UI**，連 Google Gemini | **iframe 載入 chatgpt.com** | 常同樣 iframe＋改標頭，或自製 UI＋API |
 | 要不要拔 XFO／CSP | **不用** | **要** | iframe 派通常要；API 派不用 |
-| 「上架／可用」 | 隨 Chrome 發佈 | Release＋**挑戰商店審核** | 有些通過＝審核裁量＋披露，≠官方保證安全 |
+| 「上架／可用」 | 隨 Chrome 發佈 | **已上架**＋GitHub Release | 有些通過＝審核裁量＋披露，≠官方保證安全 |
 
 ## 「問問 Gemini」在做什麼
 
@@ -34,8 +36,8 @@ Cloud Agent 無法代登 Dashboard。技術代價（iframe＋移除 CSP／XFO）
 2. **側邊欄自製 UI＋API／開官網分頁**：不必拔標頭。
 3. **Chrome 內建**：「問問 Gemini」。
 
-## 上架選項（已選 1）
+## 上架選項（已選 1，且已通過）
 
-1. **✓ 進行中**：維持 iframe＋拔標頭；2026-08-02 因隱私權政策連結被拒，改靜態 HTML 後待重送。
+1. **✓ 已上架**：維持 iframe＋拔標頭。2026-08-02 因隱私權政策連結被拒，改靜態 HTML 後重送通過。
 2. 側邊欄保留不離頁，但改 ChatGPT 呈現方式（須另拍板）。
-3. 只做 Release（目前並行保留）。
+3. GitHub Release 並行保留。

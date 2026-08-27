@@ -1,7 +1,7 @@
 # chatgpt-sidebar 產品路線圖
 
-更新日期：2026-08-14
-規劃基準：`v0.5.10`
+更新日期：2026-08-27
+規劃基準：`v0.5.10`（商店與 GitHub Release 皆為此版）
 
 這份路線圖描述建議的產品方向與里程碑順序。版本號代表依賴順序，不是日期承諾；變更紀錄見 [`CHANGELOG.md`](CHANGELOG.md)。
 
@@ -23,11 +23,12 @@
 - [x] **v0.3／v0.4**：設定、圖示、選擇器／排查文件、`executeScript` 分頁後備。
 - [x] **v0.5.x**：多動作、頁面內文、寫入穩定性與效能；商店材料與隱私政策。
 - [x] **商店材料**：上架文案與隱私政策（見 [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md)）。
-- [ ] **商店重送**：2026-08-02 因隱私權政策連結被拒；靜態 HTML 公開頁已補，待 Dashboard 更新 URL 後重送。
+- [x] **商店上架**：2026-08 通過；公開頁 https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd 。商品詳細說明仍待 Dashboard 改成四動作文案（不需新 zip）。
 
 ## 之後（非承諾）
 
-- 商店重送結果：通過則更新 README 商店連結；再拒則依審核信回覆或改架構（須再拍板）。
+- Dashboard 商品詳細說明改成摘要／翻譯／解釋／大綱（見 [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md)）。
+- 若決定發布修補：把 `main` 上未發行的 postMessage 來源比對與逾時文案打進 GitHub Release／商店（須 bump 版本）。
 - 更多動作或自訂動作按鈕列。
 - ChatGPT DOM 改版時更新 `content.js` 選擇器（長期觀測）。
 

@@ -271,6 +271,8 @@
   }
 
   window.addEventListener('message', (event) => {
+    // 只認側邊欄 parent 送來的 ping／寫入請求；嵌套 frame 或頁內腳本直接落地。
+    if (event.source !== window.parent) return;
     const data = event.data;
     if (!data || data.source !== MESSAGE_SOURCE) return;
 
@@ -287,7 +289,6 @@
     }
 
     if (data.action !== 'insert_prompt') return;
-    if (event.source !== window.parent) return;
 
     const requestId = data.requestId;
     const options = { focusAfterInsert: data.focusAfterInsert === true };

@@ -4,6 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Manifest](https://img.shields.io/badge/Manifest-V3-blue.svg)](manifest.json)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/kilnbieekgofpkgbhohmogcjkebfflkd.svg)](https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd)
 [![Release](https://img.shields.io/github/v/release/SanHsien/chatgpt-sidebar?sort=semver&display_name=tag)](https://github.com/SanHsien/chatgpt-sidebar/releases/latest)
 [![Platform](https://img.shields.io/badge/Platform-Chrome-lightgrey.svg)](#installation)
 [![CI](https://github.com/SanHsien/chatgpt-sidebar/actions/workflows/ci.yml/badge.svg)](https://github.com/SanHsien/chatgpt-sidebar/actions/workflows/ci.yml)
@@ -12,7 +13,7 @@
 
 ChatGPT Sidebar is a frontend-only Chrome Manifest V3 extension. It does not run its own AI backend and does not host API keys; it uses your existing ChatGPT browser session.
 
-[Latest release](https://github.com/SanHsien/chatgpt-sidebar/releases/latest) · [Privacy policy](https://sanhsien.github.io/chatgpt-sidebar/privacy.html) · [Security and technical risks](NOTICE.md)
+[Latest release](https://github.com/SanHsien/chatgpt-sidebar/releases/latest) · [Chrome Web Store](https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd) · [Privacy policy](https://sanhsien.github.io/chatgpt-sidebar/privacy.html) · [Security and technical risks](NOTICE.md)
 
 ## What it does
 
@@ -71,15 +72,20 @@ See [`NOTICE.md`](NOTICE.md) and [`SECURITY.md`](SECURITY.md) for permissions, C
 
 ## Installation
 
-### Download a Release (recommended)
+### Chrome Web Store (recommended)
+
+1. Open [ChatGPT Sidebar (Embedded)](https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd).
+2. Click **Add to Chrome**.
+
+The store listing currently ships **v0.5.10**. GitHub Releases still provide the zip and checksum for verification or Load unpacked.
+
+### Download a Release (developer mode)
 
 1. Download `chatgpt-sidebar-<version>.zip` from the [Latest Release](https://github.com/SanHsien/chatgpt-sidebar/releases/latest).
 2. Unzip it.
 3. Open `chrome://extensions/` and enable **Developer mode**.
 4. Choose **Load unpacked** and select the extracted folder.
 5. Releases also include a `.sha256` file for download verification.
-
-GitHub Releases are currently the primary distribution path. See [`ROADMAP.md`](ROADMAP.md) and [`docs/STORE.md`](docs/STORE.md) for Chrome Web Store status and publishing work.
 
 ### Load from source
 
@@ -115,8 +121,8 @@ CI runs the same syntax and extension-layout checks.
 - [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md): architecture, loading, validation, and troubleshooting
 - [`NOTICE.md`](NOTICE.md): permissions, privacy, CSP/XFO, and third-party risks
 - [`ROADMAP.md`](ROADMAP.md): product direction and Chrome Web Store status
-- [`docs/STORE.md`](docs/STORE.md): store strategy and review work
-- [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md): listing copy and submission checklist
+- [`docs/STORE.md`](docs/STORE.md): store strategy and live listing
+- [`docs/STORE_LISTING.md`](docs/STORE_LISTING.md): listing copy (including Dashboard text still to correct)
 - [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md): privacy-policy source
 - [`CHANGELOG.md`](CHANGELOG.md): release history
 

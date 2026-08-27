@@ -1,5 +1,12 @@
 # Decisions
 
+## 2026-08-27：商店已通過；未決定修補前不出新版
+
+- Chrome Web Store 已通過並公開（套件 v0.5.10）：https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd
+- 商品詳細說明仍是舊的「摘要當前頁面」文案；改 Dashboard 即可，不必上傳新 zip。
+- `main` 上未發行的 postMessage 來源比對與逾時文案，等維護者決定要發布修補時再 bump `manifest.json`、打 GitHub Release、上傳商店。
+- 2026-07-31「不上架」已被 2026-07-31 挑戰上架與本次通過結果取代；GitHub Release 仍並行保留。
+
 ## 2026-08-14：再次確認直接推 main
 
 - 維護者再確認：以後變更直接推 `main`，不要開 PR（含 Cloud Agent）。

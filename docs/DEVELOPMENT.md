@@ -75,7 +75,7 @@ node tools/pack-extension.mjs
 - [`docs/privacy.html`](privacy.html)：商店用公開頁
 - [`docs/PRIVACY_POLICY.md`](PRIVACY_POLICY.md)：Markdown 原文（兩者內容需同步）
 
-不要把 `github.com/.../blob/...` 填進 Dashboard。重送步驟見 [`STORE_LISTING.md`](STORE_LISTING.md)。
+不要把 `github.com/.../blob/...` 填進 Dashboard。商店已通過；商品說明待改正見 [`STORE_LISTING.md`](STORE_LISTING.md)。
 
 ## 排查
 
@@ -121,8 +121,8 @@ node tools/pack-extension.mjs
 `content.js` 依序嘗試（可見、非 disabled）：
 
 1. `#prompt-textarea`
-2. `textarea[data-id="root"]`
-3. `div#prompt-textarea[contenteditable="true"]`
+2. `div#prompt-textarea[contenteditable="true"]`
+3. `textarea[data-id="root"]`
 4. `[contenteditable="true"][data-placeholder]`
 5. `textarea`
 6. `[contenteditable="true"]`

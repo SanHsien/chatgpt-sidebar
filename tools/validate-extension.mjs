@@ -95,6 +95,13 @@ for (const rel of jsFiles) {
   }
 }
 
+if (exists('panel.js')) {
+  const panel = fs.readFileSync(path.join(root, 'panel.js'), 'utf8');
+  if (panel.includes('已縮短附文長度')) {
+    fail('panel.js 逾時文案不得再寫「已縮短附文長度」（v0.5.10 已改回盡量全文）');
+  }
+}
+
 if (exists('docs/privacy.html')) {
   const privacy = fs.readFileSync(path.join(root, 'docs/privacy.html'), 'utf8');
   if (!/<!DOCTYPE html>/i.test(privacy)) {
