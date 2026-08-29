@@ -3,6 +3,7 @@ updates:
   # 這個擴充功能沒有 package.json，執行期不引任何第三方套件（純 vanilla JS）；
   # 唯一可由機器更新的依賴面是 workflow 裡釘住的 actions。所以本 repo 也沒有
   # 每月的依賴新鮮度檢查——沒有宣告可以拿來跟現行版比。
+  # fleet-waiver: freshness -- 沒有 package.json，執行期不引第三方套件，沒有宣告下限可比對
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
