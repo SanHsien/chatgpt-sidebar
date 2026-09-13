@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 安全風險與使用邊界
+    url: https://github.com/SanHsien/chatgpt-sidebar/blob/main/NOTICE.md
+    about: 關於移除 CSP／XFO、不代管 API key，以及僅限信任本機環境使用的說明。
+  - name: 安全漏洞回報
+    url: https://github.com/SanHsien/chatgpt-sidebar/blob/main/SECURITY.md
+    about: 請勿公開開 Issue；依 SECURITY.md 私下回報。
