@@ -120,3 +120,7 @@ git diff --check
 4. 建立對應 tag / GitHub Release，附 zip 與 checksum。
 
 文件整理、CI 維護、agent 規則等不影響發行內容的變更不需要製造空 Release。
+
+## 回覆方式
+
+使用繁體中文，先說修改、驗證、剩餘限制。
