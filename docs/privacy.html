@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="index,follow">
+  <title>Privacy Policy — ChatGPT Sidebar (Embedded)</title>
+  <style>
+    body { margin: 0; font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif; line-height: 1.6; color: #1a1a1a; background: #fafafa; }
+    main { max-width: 44rem; margin: 0 auto; padding: 2rem 1.25rem 4rem; background: #fff; }
+    h1 { font-size: 1.6rem; margin-top: 0; }
+    h2 { font-size: 1.15rem; margin-top: 1.75rem; }
+    p, li { font-size: 1rem; }
+    .meta { color: #444; font-size: 0.95rem; }
+    hr { border: 0; border-top: 1px solid #ddd; margin: 2.5rem 0; }
+    a { color: #0b57d0; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>隱私權政策／Privacy Policy</h1>
+    <p class="meta">
+      產品／Product：<strong>ChatGPT Sidebar (Embedded)</strong>（<code>chatgpt-sidebar</code>）<br>
+      開發者／Developer：SanHsien<br>
+      Chrome Web Store 項目 ID：<code>kilnbieekgofpkgbhohmogcjkebfflkd</code><br>
+      更新日期／Last updated：2026-08-14
+    </p>
+    <p>本頁為可公開存取的隱私權政策（靜態 HTML，不需登入、不需執行 JavaScript）。Markdown 原文見
+      <a href="https://github.com/SanHsien/chatgpt-sidebar/blob/main/docs/PRIVACY_POLICY.md">GitHub</a>。
+    </p>
+
+    <h2>我們收集什麼</h2>
+    <p>本擴充功能<strong>沒有自有後端</strong>，不會把資料上傳到 SanHsien 的伺服器，也不販售使用者資料。</p>
+    <p>僅在你按下「摘要／翻譯／解釋／大綱」時，於<strong>本機</strong>讀取：</p>
+    <ul>
+      <li>目前分頁的網址、標題</li>
+      <li>你選取的文字（翻譯／解釋）</li>
+      <li>頁面可見文字（摘要可在設定關閉；大綱預設附上）</li>
+    </ul>
+    <p>上述內容只用來組成提示詞，寫入你自己的 ChatGPT 網頁輸入框。未按動作按鈕時，不會讀取或傳送頁面內容。</p>
+    <p>設定（網域、模板等）存在 <code>chrome.storage.sync</code>，並隨你的 Chrome 同步帳戶由 Google 處理同步。</p>
+
+    <h2>我們如何使用</h2>
+    <ul>
+      <li>提示詞只在本機組成並寫入 ChatGPT 輸入框。</li>
+      <li>是否送出訊息由你在 ChatGPT 介面決定。</li>
+      <li>資料用途僅支援本產品單一功能：在側邊欄使用 ChatGPT，並依你的操作處理目前頁面／選取。</li>
+    </ul>
+
+    <h2>我們與誰分享</h2>
+    <ul>
+      <li><strong>不會</strong>把頁面內容分享給 SanHsien 或本專案伺服器（沒有後端）。</li>
+      <li>寫入 ChatGPT 後，若你送出，內容由 <strong>OpenAI／ChatGPT</strong> 依其服務條款與隱私政策處理。本專案非 OpenAI 官方產品。</li>
+      <li>Chrome 同步儲存由 <strong>Google</strong> 依 Chrome／Google 帳戶政策處理。</li>
+    </ul>
+
+    <h2>網路與安全相關行為</h2>
+    <p>為了在 Chrome 側邊欄 iframe 載入 ChatGPT，擴充功能會用 <code>declarativeNetRequest</code> 移除 ChatGPT 網域回應中的 <code>Content-Security-Policy</code> 與 <code>X-Frame-Options</code>。這會削弱該網域的 clickjacking 防護。</p>
+    <p>主機權限包含 <code>http://*/*</code>、<code>https://*/*</code>，僅為在你點擊動作時以 <code>scripting</code> 讀取<strong>當前內容分頁</strong>；不常駐掃描所有分頁，也不追蹤瀏覽紀錄。</p>
+
+    <h2>Chrome Web Store 使用者資料政策</h2>
+    <p>本產品處理的資料僅用於上述單一用途。若有使用 Google API 或 Chrome 同步所收到的資訊，將遵守 Chrome Web Store User Data Policy，包含 Limited Use 要求。</p>
+    <p lang="en">The use of information received from Google APIs will adhere to the Chrome Web Store User Data Policy, including the Limited Use requirements.</p>
+
+    <h2>聯絡</h2>
+    <p>安全與隱私問題：sanhsien (at) gmail.com（標題加 <code>[PRIVACY]</code> 或 <code>[SECURITY]</code>）。</p>
+
+    <hr>
+
+    <h1 lang="en">Privacy Policy (English)</h1>
+    <p lang="en" class="meta">Product: <strong>ChatGPT Sidebar (Embedded)</strong>. Developer: SanHsien. Last updated: 2026-08-14.</p>
+
+    <h2 lang="en">What we collect</h2>
+    <p lang="en">This extension has <strong>no backend of its own</strong>. It does not upload data to SanHsien’s servers and does not sell user data.</p>
+    <p lang="en">Only when you click Summarize / Translate / Explain / Outline does it read <strong>locally</strong>:</p>
+    <ul lang="en">
+      <li>the current tab’s URL and title</li>
+      <li>your selected text (for Translate / Explain)</li>
+      <li>visible page text (optional for Summarize; included by default for Outline)</li>
+    </ul>
+    <p lang="en">That text is used only to build a prompt and insert it into your own ChatGPT web input box. Page content is not read or sent until you click an action.</p>
+    <p lang="en">Settings (origin, templates, and similar) are stored in <code>chrome.storage.sync</code> and synced by Google with your Chrome profile.</p>
+
+    <h2 lang="en">How we use data</h2>
+    <ul lang="en">
+      <li>Prompts are composed on-device and written into the ChatGPT input box.</li>
+      <li>You decide whether to send the message in the ChatGPT UI.</li>
+      <li>Data is used only to support the extension’s single purpose: ChatGPT in the Chrome side panel, acting on the current page / selection at your request.</li>
+    </ul>
+
+    <h2 lang="en">Sharing</h2>
+    <ul lang="en">
+      <li>Page content is <strong>not</strong> shared with SanHsien or any project server (there is none).</li>
+      <li>After insert, if you send the prompt, <strong>OpenAI / ChatGPT</strong> processes it under their terms and privacy policy. This project is not an official OpenAI product.</li>
+      <li>Chrome sync storage is handled by <strong>Google</strong> under Chrome / Google Account policies.</li>
+    </ul>
+
+    <h2 lang="en">Network and security-related behavior</h2>
+    <p lang="en">To load ChatGPT in a side-panel iframe, the extension uses <code>declarativeNetRequest</code> to strip <code>Content-Security-Policy</code> and <code>X-Frame-Options</code> from ChatGPT-domain responses. That weakens clickjacking protection for those domains.</p>
+    <p lang="en">Host permissions include <code>http://*/*</code> and <code>https://*/*</code> so that, when you click an action, <code>scripting</code> can read the <strong>active content tab</strong>. The extension does not scan all tabs in the background and does not keep a browsing history.</p>
+
+    <h2 lang="en">Chrome Web Store user data policy</h2>
+    <p lang="en">The use of information received from Google APIs will adhere to the Chrome Web Store User Data Policy, including the Limited Use requirements.</p>
+
+    <h2 lang="en">Contact</h2>
+    <p lang="en">Privacy and security: sanhsien (at) gmail.com with subject <code>[PRIVACY]</code> or <code>[SECURITY]</code>.</p>
+  </main>
+</body>
+</html>
