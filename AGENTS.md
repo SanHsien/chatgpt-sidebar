@@ -1,6 +1,6 @@
 # AGENTS.md
 
-本檔是 **SanHsien/chatgpt-sidebar** 的 AI coding agent 主要維護規則。Claude 薄入口見 [`CLAUDE.md`](CLAUDE.md)，快速索引見 [`SKILL.md`](SKILL.md)；若有衝突，以本檔為準。
+本檔是 **SanHsien/chatgpt-sidebar** 的 AI coding agent 主要維護規則。快速索引見 [`SKILL.md`](SKILL.md)；若有衝突，以本檔為準。
 
 ## 專案定位
 
