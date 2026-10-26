@@ -1,8 +1,14 @@
-import test from 'node:test';
+import test, { afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadScript, bootPanel, waitFor, flush } from './harness.mjs';
 
 const MESSAGE_SOURCE = 'chatgpt-sidebar';
+
+// 測試失敗時也要清掉假 iframe 的輪詢，否則 node 行程不會結束。
+const cleanups = [];
+afterEach(() => {
+  while (cleanups.length) cleanups.pop()();
+});
 
 test('renderTemplate：頁面或選取文字裡的 {{placeholder}} 不會被二次展開', () => {
   const { exports } = loadScript('panel.js', ['renderTemplate'], {
@@ -74,7 +80,9 @@ function startFrameResponder(panel, { pongOrigin, resultOrigin, resultOk = true 
       }
     }
   }, 2);
-  return () => clearInterval(timer);
+  const stop = () => clearInterval(timer);
+  cleanups.push(stop);
+  return stop;
 }
 
 const insertPosts = (panel) => panel.frameWindow.posted.filter((p) => p.data && p.data.action === 'insert_prompt');
