@@ -10,9 +10,9 @@ export const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 /** 讓 vm 內的計時器縮短，測試不必真的等數秒。 */
 function fastTimers() {
   return {
-    setTimeout: (fn, ms) => setTimeout(fn, Math.min(ms || 0, 15)),
+    setTimeout: (fn, ms) => setTimeout(fn, Math.round((ms || 0) / 10)),
     clearTimeout,
-    setInterval: (fn, ms) => setInterval(fn, Math.min(ms || 0, 15)),
+    setInterval: (fn, ms) => setInterval(fn, Math.round((ms || 0) / 10)),
     clearInterval
   };
 }

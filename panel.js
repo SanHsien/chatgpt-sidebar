@@ -48,6 +48,12 @@ const ACTION_LABELS = {
   outline: '大綱'
 };
 
+const CHATGPT_ORIGINS = ['https://chatgpt.com', 'https://chat.openai.com'];
+
+function isChatgptOrigin(origin) {
+  return CHATGPT_ORIGINS.includes(origin);
+}
+
 function normalizeOrigin(origin) {
   if (origin === 'https://chat.openai.com') return origin;
   return 'https://chatgpt.com';
@@ -218,15 +224,15 @@ async function fetchAuthSession(origin) {
 }
 
 function renderTemplate(template, ctx) {
-  return template
-    .split('{{url}}')
-    .join(ctx.url || '')
-    .split('{{title}}')
-    .join(ctx.title || '')
-    .split('{{selection}}')
-    .join(ctx.selection || '（無選取文字）')
-    .split('{{content}}')
-    .join(ctx.content || '（未能讀取頁面文字；請改依網址判斷，或於設定關閉摘要附內文。）');
+  // 單次掃描：替換進去的頁面文字（標題、選取、內文）不會被再次當成佔位符展開。
+  const values = {
+    url: ctx.url || '',
+    title: ctx.title || '',
+    selection: ctx.selection || '（無選取文字）',
+    content:
+      ctx.content || '（未能讀取頁面文字；請改依網址判斷，或於設定關閉摘要附內文。）'
+  };
+  return template.replace(/\{\{(url|title|selection|content)\}\}/g, (_m, key) => values[key]);
 }
 
 /** 不再為加速而截斷整段提示詞；長文靠 content.js 一次 paste。 */
@@ -259,20 +265,21 @@ function withTimeout(promise, ms, reason) {
   });
 }
 
+/** 回傳 pong 來源（ChatGPT 白名單內）；沒有回應或來源不明回傳 null。 */
 function pingFrame(frame, timeoutMs = 600) {
   return new Promise((resolve) => {
     if (!frame || !frame.contentWindow) {
-      resolve(false);
+      resolve(null);
       return;
     }
     const requestId = `ping-${Date.now()}-${Math.random().toString(16).slice(2)}`;
     let settled = false;
-    const finish = (ok) => {
+    const finish = (origin) => {
       if (settled) return;
       settled = true;
       window.removeEventListener('message', onMessage);
       clearTimeout(timer);
-      resolve(ok);
+      resolve(origin);
     };
     const onMessage = (event) => {
       // 只認這個 iframe 送回來的訊息。requestId 猜不到，但比對 event.source
@@ -281,22 +288,24 @@ function pingFrame(frame, timeoutMs = 600) {
       const data = event.data;
       if (!data || data.source !== MESSAGE_SOURCE || data.action !== 'pong') return;
       if (data.requestId !== requestId) return;
-      finish(true);
+      if (!isChatgptOrigin(event.origin)) return;
+      finish(event.origin);
     };
-    const timer = setTimeout(() => finish(false), timeoutMs);
+    const timer = setTimeout(() => finish(null), timeoutMs);
     window.addEventListener('message', onMessage);
     try {
+      // ping 不含任何資料，可用 '*'；實際來源由 pong 的 event.origin 決定。
       frame.contentWindow.postMessage(
         { source: MESSAGE_SOURCE, action: 'ping', requestId },
         '*'
       );
     } catch (_err) {
-      finish(false);
+      finish(null);
     }
   });
 }
 
-function postPromptToFrame(frame, prompt, focusAfterInsert) {
+function postPromptToFrame(frame, prompt, focusAfterInsert, targetOrigin) {
   return new Promise((resolve) => {
     if (!frame || !frame.contentWindow) {
       resolve({ ok: false, reason: 'iframe_missing' });
@@ -324,6 +333,7 @@ function postPromptToFrame(frame, prompt, focusAfterInsert) {
         return;
       }
       if (data.requestId !== requestId) return;
+      if (event.origin !== targetOrigin) return;
       finish({ ok: Boolean(data.ok), reason: data.reason || null });
     };
 
@@ -342,7 +352,8 @@ function postPromptToFrame(frame, prompt, focusAfterInsert) {
           requestId,
           focusAfterInsert: Boolean(focusAfterInsert)
         },
-        '*'
+        // 提示詞含頁面內文：只送給確認過的 ChatGPT 來源，iframe 被導向他站時瀏覽器會丟棄。
+        targetOrigin
       );
     } catch (err) {
       finish({ ok: false, reason: String(err && err.message ? err.message : err) });
@@ -490,7 +501,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   async function deliverPrompt(prompt) {
-    const alive = await pingFrame(chatFrame, 500);
+    const frameOrigin = await pingFrame(chatFrame, 500);
+    const alive = Boolean(frameOrigin);
     if (!alive) {
       // 內容腳本未就緒時，仍嘗試寫入一次；失敗再回報
       console.warn('content script ping failed; trying insert anyway');
@@ -499,7 +511,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const frameResult = await postPromptToFrame(
       chatFrame,
       prompt,
-      settings.focusAfterInsert
+      settings.focusAfterInsert,
+      frameOrigin || normalizeOrigin(settings.chatgptOrigin)
     );
     if (frameResult.ok) {
       return { ok: true, via: 'frame' };
@@ -714,8 +727,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       actionTemplates: mergeTemplates(draftTemplates)
     };
     const originChanged = next.chatgptOrigin !== settings.chatgptOrigin;
+    try {
+      await saveSettings(next);
+    } catch (err) {
+      console.error('saveSettings failed:', err);
+      showActionHint(
+        '儲存失敗',
+        `設定未儲存（可能超出同步儲存空間上限，單一項目約 8 KB；請縮短提示詞範本）：${String(err && err.message ? err.message : err)}`
+      );
+      return;
+    }
     settings = next;
-    await saveSettings(settings);
     noticeOpenLink.href = `${settings.chatgptOrigin}/`;
     setStatus('已儲存');
     toggleSettings(false);
