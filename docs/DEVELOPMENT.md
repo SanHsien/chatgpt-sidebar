@@ -46,6 +46,7 @@ google-chrome --user-data-dir=/tmp/chatgpt-sidebar-profile --load-extension=/wor
 
 ```bash
 node --check background.js content.js panel.js
+node --test "tools/tests/*.test.mjs"
 node tools/validate-extension.mjs
 git diff --check
 ```
@@ -64,7 +65,7 @@ node tools/pack-extension.mjs
 
 ## CI
 
-`.github/workflows/ci.yml` 在 push／PR 跑同上的 Node 語法檢查與 `validate-extension.mjs`。Dependabot 僅追蹤 GitHub Actions。
+`.github/workflows/ci.yml` 在 push／PR 跑同上的 Node 語法檢查、單元測試與 `validate-extension.mjs`。Dependabot 僅追蹤 GitHub Actions。
 
 `.github/workflows/pages.yml` 在 push `main` 時把 `docs/privacy.html` 發到 GitHub Pages，供 Chrome Web Store 隱私權政策欄位使用。公開 URL：https://sanhsien.github.io/chatgpt-sidebar/privacy.html
 

@@ -21,6 +21,7 @@
 git clone https://github.com/SanHsien/chatgpt-sidebar.git
 cd chatgpt-sidebar
 node --check background.js content.js panel.js
+node --test "tools/tests/*.test.mjs"
 node tools/validate-extension.mjs
 ```
 
