@@ -133,16 +133,23 @@
     clearInput(el);
 
     if (text.length >= PASTE_THRESHOLD) {
+      let handled = false;
       try {
-        pasteText(el, text);
+        // dispatchEvent 回 false = 編輯器 preventDefault 了，表示它自己接手處理。
+        handled = pasteText(el, text) === false;
       } catch (_err) {
+        handled = false;
+      }
+      // 合成 paste 沒被編輯器處理就什麼都不會寫入；此時改用 insertText，避免假報成功。
+      // 已處理時不再補寫（編輯器可能把長文轉成附件或延後渲染，補寫會重複）。
+      if (!handled) {
         try {
-          document.execCommand('insertText', false, text);
-        } catch (_err2) {
+          if (!document.execCommand('insertText', false, text)) return { ok: false };
+        } catch (_err) {
           return { ok: false };
         }
       }
-      // 長文：已送出 paste，視為成功（不等整段渲染完）
+      // 不等整段渲染完，立即回報成功
       return { ok: true, fast: true };
     }
 

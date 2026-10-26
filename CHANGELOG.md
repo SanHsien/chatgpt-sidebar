@@ -4,6 +4,12 @@
 
 ## Unreleased
 
+- **安全性**：DNR 的 `urlFilter` 改為 `|https://…` 錨定在網址開頭。原本網址只要「含有」`https://chatgpt.com/`（例如其他網站的 `?next=https://chatgpt.com/`），該網站的 CSP／X-Frame-Options 也會被移除。
+- **安全性**：側邊欄送進 iframe 的提示詞（含頁面內文）不再用 `postMessage` 的 `*`；改送給回應 ping 的 ChatGPT 來源（`chatgpt.com`／`chat.openai.com`），回覆也須來自該來源。iframe 被導向其他網站時不會外洩內文。
+- **修復**：範本只做單次替換，選取文字含 `{{content}}` 時不再把整頁內文夾進翻譯／解釋提示詞。
+- **修復**：儲存設定失敗（如超出 sync 單項 8 KB）時顯示錯誤並保留原設定，不再默默失敗、也不再讓記憶體設定與儲存內容不一致。
+- **修復**：長文寫入時若編輯器沒接手合成 paste 事件，改用 `insertText` 補寫，不再回報成功卻沒寫入。
+- **開發**：新增 `tools/tests/`（`node --test "tools/tests/*.test.mjs"`，以假物件在 vm 內跑，不開瀏覽器），CI 加上單元測試步驟。
 - **文案**：寫入逾時的說明條不再說「已縮短附文長度」。v0.5.10 已改回盡量全文；逾時時請再試或按「檢查」重載聊天畫面。
 - **安全性**：`panel.js` 的兩個 `postMessage` 監聽（ping／插入結果回報）補上來源比對。原本只驗 `data.source`、`action` 與 `requestId`，沒有比對 `event.source`；現在只認送出請求的那個 iframe。`content.js` 的 ping／寫入監聽同樣只認 `window.parent`。由 CodeQL `js/missing-origin-check` 指出。
 - **商店**：Chrome Web Store 已通過並公開（套件仍為 v0.5.10）。公開頁見 [`docs/STORE.md`](docs/STORE.md)。商品詳細說明仍是舊文案，有空再改 Dashboard 即可、不需新 zip。未決定發布修補前不 bump 版本、不建 GitHub Release。
