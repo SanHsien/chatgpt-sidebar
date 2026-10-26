@@ -1,6 +1,9 @@
 // background.js
 // Service worker：DNR 移除 CSP/XFO、側邊欄行為、分頁提示詞轉發與 executeScript 後備。
 
+// urlFilter 必須以 `|` 錨定在網址開頭：不錨定的話，任何網址「含有」
+// https://chatgpt.com/ 字串（例如 ?next=https://chatgpt.com/）的其他網站，
+// 其 CSP／X-Frame-Options 也會被一併移除。
 const DNR_RULES = [
   {
     id: 1,
@@ -13,7 +16,7 @@ const DNR_RULES = [
       ]
     },
     condition: {
-      urlFilter: 'https://chat.openai.com/*',
+      urlFilter: '|https://chat.openai.com/',
       resourceTypes: ['main_frame', 'sub_frame']
     }
   },
@@ -28,7 +31,7 @@ const DNR_RULES = [
       ]
     },
     condition: {
-      urlFilter: 'https://chatgpt.com/*',
+      urlFilter: '|https://chatgpt.com/',
       resourceTypes: ['main_frame', 'sub_frame']
     }
   }
