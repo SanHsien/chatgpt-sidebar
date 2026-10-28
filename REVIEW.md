@@ -4,7 +4,7 @@
 
 `v0.5.10` 仍是商店與 GitHub Release 的發行版：寫入前先清空；附文盡量全文；長文一次 paste。Chrome Web Store 已通過（公開頁見 [`docs/STORE.md`](docs/STORE.md)）。商品詳細說明仍是舊文案，有空再改 Dashboard，不必出新版。`main` 另有未發行的 postMessage 來源比對與逾時文案修正，等決定要發布修補時再 bump／Release。
 
-2026-10-29 維護者實機發現：v0.5.10 與當時的 `main` 都會「顯示已寫入、輸入框卻是空的」（ChatGPT 把長的純文字 paste 轉成附件）。`main` 已修（改用 HTML paste 並讀回驗證，見 CHANGELOG Unreleased），這是發 v0.5.11 修補版的主要理由。
+2026-10-29 維護者實機發現：v0.5.10 與當時的 `main` 都會「顯示已寫入、輸入框卻是空的」（ChatGPT 把長的純文字 paste 轉成附件）。`main` 已修（`2393b86`，2026-10-29；改用 HTML paste 並讀回驗證，見 CHANGELOG Unreleased），這是發 v0.5.11 修補版的主要理由。
 
 ## 本機實測（維護者）
 
