@@ -24,7 +24,7 @@ Copyright 2026 SanHsien
 | `{{url}}` | 分頁網址 |
 | `{{title}}` | 分頁標題 |
 | `{{selection}}` | 目前選取文字（翻譯／解釋需要） |
-| `{{content}}` | `article`／`main`／`body` 的可見文字（盡量全文；僅極端超大頁約 10 萬字截斷） |
+| `{{content}}` | `article`／`main`／`body` 的可見文字（盡量全文；超過 ChatGPT 輸入框單次貼上上限時截掉後段，範本指示保留） |
 
 讀取透過 `scripting.executeScript`（manifest 宣告 `http://*/*`／`https://*/*` 主機權限）。側邊欄內按鈕點擊**不會**像工具列圖示那樣自動取得 `activeTab` 暫時存取，因此必須有廣域主機權限才能讀 Notion 等任意網站；僅在你點擊動作當下對**當前內容分頁**讀取，不常駐掃描所有分頁。
 

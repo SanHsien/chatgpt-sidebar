@@ -8,7 +8,11 @@
 - **安全性**：側邊欄送進 iframe 的提示詞（含頁面內文）不再用 `postMessage` 的 `*`；改送給回應 ping 的 ChatGPT 來源（`chatgpt.com`／`chat.openai.com`），回覆也須來自該來源。iframe 被導向其他網站時不會外洩內文。
 - **修復**：範本只做單次替換，選取文字含 `{{content}}` 時不再把整頁內文夾進翻譯／解釋提示詞。
 - **修復**：儲存設定失敗（如超出 sync 單項 8 KB）時顯示錯誤並保留原設定，不再默默失敗、也不再讓記憶體設定與儲存內容不一致。
-- **修復**：長文寫入時若編輯器沒接手合成 paste 事件，改用 `insertText` 補寫，不再回報成功卻沒寫入。
+- **修復**：狀態列顯示「已寫入」但 ChatGPT 輸入框是空的。ChatGPT 現在會把長的純文字 paste 轉成「貼上的文字附件」，舊版沒有讀回輸入框就回報成功（v0.5.10 也受影響）。改為：
+  - 全選後等 50ms 讓編輯器同步選取，再以 `text/html`（一行一段、`&nbsp;` 保留縮排）一次 paste 取代舊字；寫完讀回輸入框比對，沒真的進框就顯示「寫入失敗」。
+  - 不再用 `execCommand('delete')` 清空：輸入框已有長文時，ChatGPT 刪除要數十秒、整頁卡住。
+  - ChatGPT 會默默丟掉超過約 10 萬字元的 HTML paste：提示詞超過時先截頁面內文、再截選取文字，範本指示保持完整，並提示「內文已截斷」。
+  - 側邊欄輸入框回報寫入失敗或太長時，不再改寫到其他 ChatGPT 分頁（會蓋掉那邊的草稿）；分頁後備只留給 iframe 沒回應的情況。
 - **開發**：新增 `tools/tests/`（`node --test "tools/tests/*.test.mjs"`，以假物件在 vm 內跑，不開瀏覽器），CI 加上單元測試步驟。
 - **文案**：寫入逾時的說明條不再說「已縮短附文長度」。v0.5.10 已改回盡量全文；逾時時請再試或按「檢查」重載聊天畫面。
 - **安全性**：`panel.js` 的兩個 `postMessage` 監聽（ping／插入結果回報）補上來源比對。原本只驗 `data.source`、`action` 與 `requestId`，沒有比對 `event.source`；現在只認送出請求的那個 iframe。`content.js` 的 ping／寫入監聽同樣只認 `window.parent`。由 CodeQL `js/missing-origin-check` 指出。

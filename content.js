@@ -8,8 +8,12 @@
   globalThis.__chatgptSidebarContentReady = true;
 
   const MESSAGE_SOURCE = 'chatgpt-sidebar';
-  // 超過此長度改走一次 paste（比 insertText 快很多）
-  const PASTE_THRESHOLD = 400;
+  // ChatGPT 會把 text/html 超過約 10 萬字元的 paste 整個丟掉（2026-10 實測 98k 可、109k 不可）。
+  // panel.js 的 PASTE_HTML_MAX 必須同值，並用同一套 toPasteHtml 規則估長度。
+  const PASTE_HTML_MAX = 95000;
+  // execCommand('selectAll') 之後 ProseMirror 要等 selectionchange 才同步選取；
+  // 立刻 paste 會用舊選取，變成接在舊字後面而不是取代。
+  const SELECTION_SETTLE_MS = 50;
 
   function isVisible(el) {
     if (!el) return false;
@@ -69,12 +73,34 @@
       .replace(/\s+/g, '');
   }
 
-  function textAppearsWritten(written, expected) {
+  /** 輸入框內容就是這段提示詞：開頭相同、長度相近（擋「接在舊字後面」與「變成附件、框內空白」）。 */
+  function textFullyWritten(written, expected) {
     const w = normalizeText(written);
     const e = normalizeText(expected);
-    if (!e) return w.length > 0;
-    const head = e.slice(0, Math.min(20, e.length));
-    return Boolean(head && w.includes(head));
+    if (!e) return false;
+    if (!w.startsWith(e.slice(0, Math.min(20, e.length)))) return false;
+    return Math.abs(w.length - e.length) <= Math.max(20, Math.ceil(e.length * 0.05));
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  /** HTML 會把連續空白與行首空白壓成一個；改成 &nbsp; 保住縮排。 */
+  function keepSpaces(s) {
+    return s.replace(/ {2,}/g, (m) => `${'&nbsp;'.repeat(m.length - 1)} `).replace(/^ /, '&nbsp;');
+  }
+
+  /** 一行一個 <p>。panel.js 有同一份 toPasteHtml 用來估長度，兩份必須一致。 */
+  function toPasteHtml(text) {
+    return text
+      .split('\n')
+      .map((line) => `<p>${keepSpaces(escapeHtml(line))}</p>`)
+      .join('');
+  }
+
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   function selectAll(el) {
@@ -93,29 +119,13 @@
     }
   }
 
-  /** 明確清空（摘要／大綱／任何動作寫入前都要先清掉舊字）。 */
-  function clearInput(el) {
-    el.focus();
-    selectAll(el);
-    try {
-      document.execCommand('delete', false, null);
-    } catch (_err) {
-      // ignore
-    }
-    // 若仍有殘留，再 selectAll 一次讓後續 insert／paste 覆蓋
-    if ((readInputText(el) || '').trim()) {
-      selectAll(el);
-      try {
-        document.execCommand('insertText', false, '');
-      } catch (_err) {
-        // ignore
-      }
-    }
-  }
-
-  function pasteText(el, text) {
+  /**
+   * 只放 text/html：ChatGPT 會把長的 text/plain paste 轉成「貼上的文字附件」，
+   * 輸入框裡什麼都沒有。text/html 會照段落留在輸入框。
+   */
+  function pasteHtml(el, html) {
     const dt = new DataTransfer();
-    dt.setData('text/plain', text);
+    dt.setData('text/html', html);
     return el.dispatchEvent(
       new ClipboardEvent('paste', {
         bubbles: true,
@@ -126,59 +136,36 @@
   }
 
   /**
-   * 先清空再寫入。短文 insertText；長文一次 paste（最快）。
-   * 長文 paste 後不等 DOM 全同步，立即回報成功，避免卡住。
+   * 全選後一次 paste 取代舊字，寫完讀回輸入框比對；沒真的進框就回報失敗，不假報成功。
+   * 不用 execCommand('delete') 清空：ProseMirror 刪長文要數十秒、整頁卡住。
+   * 也不用逐行 insertText：5000 字就要 10 秒。
    */
-  function setContentEditableValue(el, text) {
-    clearInput(el);
+  async function setContentEditableValue(el, text) {
+    const html = toPasteHtml(text);
+    if (html.length > PASTE_HTML_MAX) return { ok: false, reason: 'too_long' };
 
-    if (text.length >= PASTE_THRESHOLD) {
-      let handled = false;
-      try {
-        // dispatchEvent 回 false = 編輯器 preventDefault 了，表示它自己接手處理。
-        handled = pasteText(el, text) === false;
-      } catch (_err) {
-        handled = false;
-      }
-      // 合成 paste 沒被編輯器處理就什麼都不會寫入；此時改用 insertText，避免假報成功。
-      // 已處理時不再補寫（編輯器可能把長文轉成附件或延後渲染，補寫會重複）。
-      if (!handled) {
-        try {
-          if (!document.execCommand('insertText', false, text)) return { ok: false };
-        } catch (_err) {
-          return { ok: false };
-        }
-      }
-      // 不等整段渲染完，立即回報成功
-      return { ok: true, fast: true };
-    }
+    selectAll(el);
+    await sleep(SELECTION_SETTLE_MS);
 
+    let handled = false;
     try {
-      if (!document.execCommand('insertText', false, text)) {
-        pasteText(el, text);
-      }
+      // dispatchEvent 回 false = 編輯器 preventDefault 了，表示它自己接手處理。
+      handled = pasteHtml(el, html) === false;
     } catch (_err) {
+      handled = false;
+    }
+    // 合成 paste 沒被編輯器處理就什麼都不會寫入；此時改用 insertText（取代目前選取）。
+    if (!handled) {
       try {
-        pasteText(el, text);
-      } catch (_err2) {
+        if (!document.execCommand('insertText', false, text)) return { ok: false };
+      } catch (_err) {
         return { ok: false };
       }
     }
-
-    if (textAppearsWritten(readInputText(el), text)) {
-      return { ok: true };
-    }
-    // 短文驗證失敗再 paste 一次
-    clearInput(el);
-    try {
-      pasteText(el, text);
-    } catch (_err) {
-      return { ok: false };
-    }
-    return { ok: textAppearsWritten(readInputText(el), text) };
+    return { ok: textFullyWritten(readInputText(el), text) };
   }
 
-  function insertPrompt(promptText, options = {}) {
+  async function insertPrompt(promptText, options = {}) {
     const input = findChatInput();
     if (!input) return { ok: false, reason: 'no_input' };
 
@@ -191,9 +178,9 @@
         setNativeTextareaValue(input, ''); // 先清空
         setNativeTextareaValue(input, text);
       } else if (input.isContentEditable || input.getAttribute('contenteditable') === 'true') {
-        const result = setContentEditableValue(input, text);
+        const result = await setContentEditableValue(input, text);
         if (!result.ok) {
-          return { ok: false, reason: 'write_failed' };
+          return { ok: false, reason: result.reason || 'write_failed' };
         }
       } else {
         return { ok: false, reason: 'no_input' };
@@ -210,56 +197,21 @@
   }
 
   /**
-   * 有輸入框時：最多寫兩次就結束（長文不狂重試）。
+   * 有輸入框時只寫一次：長文 paste 要 1～2 秒，重試會超過 panel 等待的時間。
    * 無輸入框時：短輪詢等待出現。
    */
-  function insertPromptWithRetry(promptText, options = {}, timeoutMs = 2000) {
-    return new Promise((resolve) => {
-      let settled = false;
-      let interval = null;
-      let timer = null;
+  async function insertPromptWithRetry(promptText, options = {}, timeoutMs = 2000) {
+    const first = await insertPrompt(promptText, options);
+    if (first.ok || first.reason !== 'no_input') return first;
 
-      const finish = (result) => {
-        if (settled) return;
-        settled = true;
-        if (interval != null) clearInterval(interval);
-        if (timer != null) clearTimeout(timer);
-        resolve(result);
-      };
-
-      const first = insertPrompt(promptText, options);
-      if (first.ok) {
-        finish(first);
-        return;
-      }
-      if (first.reason !== 'no_input') {
-        const second = insertPrompt(promptText, options);
-        finish(second.ok ? second : first);
-        return;
-      }
-
-      const start = Date.now();
-      interval = setInterval(() => {
-        const result = insertPrompt(promptText, options);
-        if (result.ok) {
-          finish(result);
-          return;
-        }
-        if (result.reason !== 'no_input' || Date.now() - start > timeoutMs) {
-          finish({
-            ok: false,
-            reason: findChatInput() ? result.reason || 'write_failed' : 'no_input'
-          });
-        }
-      }, 200);
-
-      timer = setTimeout(() => {
-        finish({
-          ok: false,
-          reason: findChatInput() ? 'write_failed' : 'no_input'
-        });
-      }, timeoutMs + 100);
-    });
+    const start = Date.now();
+    while (Date.now() - start <= timeoutMs) {
+      await sleep(200);
+      const result = await insertPrompt(promptText, options);
+      if (result.ok) return result;
+      if (result.reason !== 'no_input') return result;
+    }
+    return { ok: false, reason: 'no_input' };
   }
 
   function replyToParent(requestId, result) {

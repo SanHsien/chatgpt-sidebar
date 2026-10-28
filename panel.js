@@ -235,9 +235,48 @@ function renderTemplate(template, ctx) {
   return template.replace(/\{\{(url|title|selection|content)\}\}/g, (_m, key) => values[key]);
 }
 
-/** 不再為加速而截斷整段提示詞；長文靠 content.js 一次 paste。 */
-function clampPrompt(prompt) {
-  return String(prompt || '');
+/** 與 content.js 的 PASTE_HTML_MAX 同值：ChatGPT 會丟掉 text/html 超過約 10 萬字元的 paste。 */
+const PASTE_HTML_MAX = 95000;
+const CONTENT_CUT_NOTE = '\n…（已截斷：超過 ChatGPT 輸入框單次貼上上限）';
+
+/** 與 content.js 的 toPasteHtml 同一份規則（tools/tests 會比對兩邊輸出長度）。 */
+function toPasteHtml(text) {
+  const keepSpaces = (s) =>
+    s.replace(/ {2,}/g, (m) => `${'&nbsp;'.repeat(m.length - 1)} `).replace(/^ /, '&nbsp;');
+  return String(text || '')
+    .split('\n')
+    .map((line) => `<p>${keepSpaces(line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'))}</p>`)
+    .join('');
+}
+
+function estimatePasteHtmlLength(text) {
+  return toPasteHtml(text).length;
+}
+
+/**
+ * 套用範本；整段太長時先縮頁面內文、再縮選取文字，範本指示保持完整。
+ * @returns {{ prompt: string, cut: boolean }}
+ */
+function renderPromptForPaste(template, ctx) {
+  const parts = { content: String(ctx.content || ''), selection: String(ctx.selection || '') };
+  const cutKeys = new Set();
+  const render = () =>
+    renderTemplate(template, {
+      ...ctx,
+      content: cutKeys.has('content') ? parts.content + CONTENT_CUT_NOTE : ctx.content,
+      selection: cutKeys.has('selection') ? parts.selection + CONTENT_CUT_NOTE : ctx.selection
+    });
+  let prompt = render();
+  for (const key of ['content', 'selection']) {
+    while (estimatePasteHtmlLength(prompt) > PASTE_HTML_MAX && parts[key].length > 0) {
+      const excess = estimatePasteHtmlLength(prompt) - PASTE_HTML_MAX;
+      // HTML 每個字元至少 1，多砍 2% 讓迴圈很快收斂
+      parts[key] = parts[key].slice(0, Math.max(0, parts[key].length - excess - Math.ceil(parts[key].length * 0.02)));
+      cutKeys.add(key);
+      prompt = render();
+    }
+  }
+  return { prompt, cut: cutKeys.size > 0, cutKeys: [...cutKeys] };
 }
 
 function withTimeout(promise, ms, reason) {
@@ -313,8 +352,9 @@ function postPromptToFrame(frame, prompt, focusAfterInsert, targetOrigin) {
     }
 
     const requestId = `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-    // 內容腳本端最長約 2.5s；這裡給一點緩衝即可
-    const timeoutMs = 4000;
+    // 內容腳本端最壞：沒輸入框時輪詢 2s，再 50ms 等選取同步＋一次 paste（上限長度實測約 2s）。
+    // 逾時會改寫到分頁，所以要蓋住最壞情況，否則 iframe 寫好了、分頁草稿也被蓋掉。
+    const timeoutMs = 5000;
     let settled = false;
 
     const finish = (result) => {
@@ -517,6 +557,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (frameResult.ok) {
       return { ok: true, via: 'frame' };
     }
+    // 側邊欄的輸入框有回應、只是放不下或沒寫進去：換分頁寫結果一樣，還會蓋掉那個分頁的草稿。
+    // 分頁後備只留給 iframe 沒回應（逾時、腳本未載入）的情況。
+    if (frameResult.reason === 'too_long' || frameResult.reason === 'write_failed') {
+      return frameResult;
+    }
 
     const tabResult = await withTimeout(
       chrome.runtime.sendMessage({
@@ -643,7 +688,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       const template = settings.actionTemplates[actionKey] || DEFAULT_TEMPLATES[actionKey];
-      const prompt = clampPrompt(renderTemplate(template, ctx));
+      const { prompt, cutKeys } = renderPromptForPaste(template, ctx);
 
       if (outlineFallbackToUrl) {
         showActionHint(
@@ -653,10 +698,23 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       setStatus('寫入中…');
-      const result = await withTimeout(deliverPrompt(prompt), 8000, 'timeout');
+      // ping 500ms＋iframe 5s＋分頁後備 5s，加緩衝；比這短會在分頁其實寫好時顯示逾時
+      const result = await withTimeout(deliverPrompt(prompt), 12000, 'timeout');
       if (result.ok) {
         hideActionHint();
         setStatus(outlineFallbackToUrl ? '已寫入（僅網址）' : result.via === 'tab' ? '已寫入（分頁）' : '已寫入');
+        if (cutKeys.length > 0) {
+          const what = cutKeys.includes('content') ? '頁面文字' : '選取文字';
+          showActionHint(
+            `已寫入（${what}已截斷）`,
+            `${what}超過 ChatGPT 輸入框單次貼上的上限，後段已截掉；範本指示仍完整。`
+          );
+        }
+        return;
+      }
+
+      if (result.reason === 'too_long') {
+        showActionHint('提示詞太長', '超過 ChatGPT 輸入框單次貼上的上限。請縮短提示詞範本後再試。');
         return;
       }
 
