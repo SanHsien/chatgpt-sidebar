@@ -2,7 +2,7 @@
 
 本檔記錄 `chatgpt-sidebar` 的版本變更。產品說明見 [`README.md`](README.md)；路線圖見 [`ROADMAP.md`](ROADMAP.md)。
 
-## Unreleased
+## v0.5.11
 
 - **安全性**：DNR 的 `urlFilter` 改為 `|https://…` 錨定在網址開頭。原本網址只要「含有」`https://chatgpt.com/`（例如其他網站的 `?next=https://chatgpt.com/`），該網站的 CSP／X-Frame-Options 也會被移除。
 - **安全性**：側邊欄送進 iframe 的提示詞（含頁面內文）不再用 `postMessage` 的 `*`；改送給回應 ping 的 ChatGPT 來源（`chatgpt.com`／`chat.openai.com`），回覆也須來自該來源。iframe 被導向其他網站時不會外洩內文。
@@ -16,7 +16,8 @@
 - **開發**：新增 `tools/tests/`（`node --test "tools/tests/*.test.mjs"`，以假物件在 vm 內跑，不開瀏覽器），CI 加上單元測試步驟。
 - **文案**：寫入逾時的說明條不再說「已縮短附文長度」。v0.5.10 已改回盡量全文；逾時時請再試或按「檢查」重載聊天畫面。
 - **安全性**：`panel.js` 的兩個 `postMessage` 監聽（ping／插入結果回報）補上來源比對。原本只驗 `data.source`、`action` 與 `requestId`，沒有比對 `event.source`；現在只認送出請求的那個 iframe。`content.js` 的 ping／寫入監聽同樣只認 `window.parent`。由 CodeQL `js/missing-origin-check` 指出。
-- **商店**：Chrome Web Store 已通過並公開（套件仍為 v0.5.10）。公開頁見 [`docs/STORE.md`](docs/STORE.md)。商品詳細說明仍是舊文案，有空再改 Dashboard 即可、不需新 zip。未決定發布修補前不 bump 版本、不建 GitHub Release。
+- **修復**：ChatGPT 頁面忙時 ping 常慢過 500ms、寫入照樣成功；這則提示改用 `console.info`，不再被 `chrome://extensions` 列成「錯誤」。
+- **商店**：v0.5.10 已在 Chrome Web Store 公開，公開頁見 [`docs/STORE.md`](docs/STORE.md)。v0.5.11 隨本版上傳送審。
 
 ## v0.5.10
 

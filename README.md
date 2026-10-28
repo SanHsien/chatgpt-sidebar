@@ -77,7 +77,7 @@ Chrome Side Panel
 1. 開啟 [ChatGPT Sidebar (Embedded)](https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd)。
 2. 按「加到 Chrome」。
 
-商店目前發行 **v0.5.10**。GitHub Release 仍提供 zip 與 checksum，供核對或 Load unpacked。
+最新版本為 **v0.5.11**（GitHub Release）；Chrome Web Store 更新需經審核，商店頁顯示的版本可能稍晚。GitHub Release 仍提供 zip 與 checksum，供核對或 Load unpacked。
 
 ### 下載 Release（開發人員模式）
 

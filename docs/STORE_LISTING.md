@@ -1,7 +1,7 @@
 # Chrome Web Store 上架包
 
 更新日期：2026-08-27
-狀態：**已通過並公開**（套件仍為 v0.5.10；Dashboard 顯示 Updated 2026-08-18）
+狀態：**已通過並公開**（商店公開 v0.5.10；v0.5.11 已發 GitHub Release，商店更新待上傳送審）
 
 公開頁：https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd
 項目 ID：`kilnbieekgofpkgbhohmogcjkebfflkd`
@@ -22,9 +22,9 @@
 
 ## 目前套件
 
-商店與 GitHub Release 都是 **[v0.5.10](https://github.com/SanHsien/chatgpt-sidebar/releases/tag/v0.5.10)**。未決定發布修補前：不要 bump `manifest.json`、不要建 GitHub Release、不要把未發行 zip 上傳到商店。
+最新版本 **[v0.5.11](https://github.com/SanHsien/chatgpt-sidebar/releases/tag/v0.5.11)**（2026-10-29）。商店上傳用 manifest 在 zip 根目錄的套件；GitHub Release 的 zip 多一層 `chatgpt-sidebar-<version>/` 資料夾，供 Load unpacked。
 
-若之後決定出修補，再執行 `node tools/pack-extension.mjs` 並上傳對應 zip。
+下一次出修補時：bump `manifest.json`、更新 `CHANGELOG.md`、`node tools/pack-extension.mjs`（Windows 沒有 `zip` 指令時改用 Python `zipfile` 產生同結構）、建 GitHub Release，再上傳商店。
 
 ## Store listing（可直接貼）
 

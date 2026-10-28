@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "ChatGPT Sidebar (Embedded)",
   "description": "Side panel ChatGPT with one-click summarize, translate, explain, and outline prompts from the current page.",
-  "version": "0.5.10",
+  "version": "0.5.11",
   "permissions": [
     "sidePanel",
     "declarativeNetRequest",

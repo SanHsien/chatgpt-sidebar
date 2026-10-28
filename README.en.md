@@ -77,7 +77,7 @@ See [`NOTICE.md`](NOTICE.md) and [`SECURITY.md`](SECURITY.md) for permissions, C
 1. Open [ChatGPT Sidebar (Embedded)](https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd).
 2. Click **Add to Chrome**.
 
-The store listing currently ships **v0.5.10**. GitHub Releases still provide the zip and checksum for verification or Load unpacked.
+The latest version is **v0.5.11** (GitHub Release); Chrome Web Store updates go through review, so the store page may lag behind. GitHub Releases still provide the zip and checksum for verification or Load unpacked.
 
 ### Download a Release (developer mode)
 
