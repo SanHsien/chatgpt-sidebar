@@ -544,8 +544,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const frameOrigin = await pingFrame(chatFrame, 500);
     const alive = Boolean(frameOrigin);
     if (!alive) {
-      // 內容腳本未就緒時，仍嘗試寫入一次；失敗再回報
-      console.warn('content script ping failed; trying insert anyway');
+      // 內容腳本未就緒時，仍嘗試寫入一次；失敗再回報。
+      // 用 info 不用 warn：ChatGPT 頁面忙時 ping 常慢過 500ms 但寫入照樣成功，
+      // warn 會被 chrome://extensions 列成「錯誤」，讓人以為壞了。
+      console.info('content script ping failed; trying insert anyway');
     }
 
     const frameResult = await postPromptToFrame(
