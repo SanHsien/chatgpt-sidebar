@@ -14,7 +14,6 @@ v0.5.11 已於 2026-10-29 發 GitHub Release（`6e25686a36f1`），同日上傳 
 | 項目 | 為什麼 | 驗收方式 | 建議執行者 | 證據 |
 | --- | --- | --- | --- | --- |
 | 在 Chrome Developer Dashboard 把商品「詳細說明」換成 `docs/STORE_LISTING.md` 的新文案 | 商店頁仍只提「摘要當前頁面」，與現有四個動作不符；不需新 zip、不需 bump 版本 | 商店公開頁的詳細說明出現摘要／翻譯／解釋／大綱四項；`docs/STORE_LISTING.md` 的「狀態」行同一個 commit 更新 | 維護者 | `docs/STORE_LISTING.md:13-18`、`docs/STORE.md:12`、`docs/DECISIONS.md:6` |
-| 把寫入行為的實機 smoke 補進 `docs/DEVELOPMENT.md`「手動 smoke」：長提示詞寫入後輸入框非空且沒有變成「貼上的文字附件」、沒有自動送出、翻譯只含選取文字不含整頁內文 | 現有 smoke 只有 3 條（`docs/DEVELOPMENT.md:60-64`），沒涵蓋這輪修過的 `2393b86`（顯示已寫入但輸入框是空的）與 `1873aa4` 三項回歸；單元測試是假物件，擋不到 ChatGPT 實際編輯器行為。動手前 `git pull` 確認 `docs/DEVELOPMENT.md` smoke 段沒有同時被改 | `docs/DEVELOPMENT.md` smoke 段新增上述三條且每條可逐步照做；`node tools/validate-extension.mjs` 與 `git diff --check` 綠 | Claude Sonnet | `CHANGELOG.md` v0.5.11 段、`REVIEW.md` 結論第二段、`docs/DEVELOPMENT.md:60-64` |
 
 ## 中期：等條件成立再做
 
