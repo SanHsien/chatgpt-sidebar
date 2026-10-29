@@ -5,25 +5,25 @@
 
 ## 現況
 
-`chatgpt-sidebar` 是 Chrome MV3 側邊欄擴充功能：把目前分頁或選取文字組成摘要／翻譯／解釋／大綱提示詞，寫進使用者自己已登入的 ChatGPT 輸入框（`AGENTS.md:7-9`）。商店與 GitHub Release 仍是 v0.5.10，`manifest.json:5` 同為 0.5.10；`main` 帶有未發行的安全與寫入修正（`CHANGELOG.md` Unreleased 段）。
+`chatgpt-sidebar` 是 Chrome MV3 側邊欄擴充功能：把目前分頁或選取文字組成摘要／翻譯／解釋／大綱提示詞，寫進使用者自己已登入的 ChatGPT 輸入框（`AGENTS.md:7-9`）。`manifest.json:5` 為 0.5.11，與 GitHub Release 一致；商店公開的仍是 v0.5.10。
 健康：open issue 0、open PR 0、Dependabot 與 code scanning 告警 0，CI／CodeQL／Pages 在 `main` 最近一次皆 success（2026-10-29 `gh` 查詢）。
-v0.5.11 已於 2026-10-29 發 GitHub Release（`6e25686a36f1`）；Chrome Web Store 公開的仍是 v0.5.10，v0.5.11 待維護者上傳送審。
+v0.5.11 已於 2026-10-29 發 GitHub Release（`6e25686a36f1`），同日上傳 Chrome Web Store 送審，審核中。
 
 ## 近期：可以直接動手
 
 | 項目 | 為什麼 | 驗收方式 | 建議執行者 | 證據 |
 | --- | --- | --- | --- | --- |
 | 在 Chrome Developer Dashboard 把商品「詳細說明」換成 `docs/STORE_LISTING.md` 的新文案 | 商店頁仍只提「摘要當前頁面」，與現有四個動作不符；不需新 zip、不需 bump 版本 | 商店公開頁的詳細說明出現摘要／翻譯／解釋／大綱四項；`docs/STORE_LISTING.md` 的「狀態」行同一個 commit 更新 | 維護者 | `docs/STORE_LISTING.md:13-18`、`docs/STORE.md:12`、`docs/DECISIONS.md:6` |
-| 把寫入行為的實機 smoke 補進 `docs/DEVELOPMENT.md`「手動 smoke」：長提示詞寫入後輸入框非空且沒有變成「貼上的文字附件」、沒有自動送出、翻譯只含選取文字不含整頁內文 | 現有 smoke 只有 3 條（`docs/DEVELOPMENT.md:60-64`），沒涵蓋這輪修過的 `2393b86`（顯示已寫入但輸入框是空的）與 `1873aa4` 三項回歸；單元測試是假物件，擋不到 ChatGPT 實際編輯器行為。動手前 `git pull` 確認 `docs/DEVELOPMENT.md` smoke 段沒有同時被改 | `docs/DEVELOPMENT.md` smoke 段新增上述三條且每條可逐步照做；`node tools/validate-extension.mjs` 與 `git diff --check` 綠 | Claude Sonnet | `CHANGELOG.md` Unreleased 段、`REVIEW.md` 結論第二段、`docs/DEVELOPMENT.md:60-64` |
+| 把寫入行為的實機 smoke 補進 `docs/DEVELOPMENT.md`「手動 smoke」：長提示詞寫入後輸入框非空且沒有變成「貼上的文字附件」、沒有自動送出、翻譯只含選取文字不含整頁內文 | 現有 smoke 只有 3 條（`docs/DEVELOPMENT.md:60-64`），沒涵蓋這輪修過的 `2393b86`（顯示已寫入但輸入框是空的）與 `1873aa4` 三項回歸；單元測試是假物件，擋不到 ChatGPT 實際編輯器行為。動手前 `git pull` 確認 `docs/DEVELOPMENT.md` smoke 段沒有同時被改 | `docs/DEVELOPMENT.md` smoke 段新增上述三條且每條可逐步照做；`node tools/validate-extension.mjs` 與 `git diff --check` 綠 | Claude Sonnet | `CHANGELOG.md` v0.5.11 段、`REVIEW.md` 結論第二段、`docs/DEVELOPMENT.md:60-64` |
 
 ## 中期：等條件成立再做
 
 | 項目 | 觸發條件 | 驗收方式 | 建議執行者 | 證據 |
 | --- | --- | --- | --- | --- |
-| 把 v0.5.11 上傳 Chrome Web Store 送審 | 維護者決定送審（GitHub Release 已發） | 商店 Dashboard 顯示 v0.5.11 審核中或已公開；上傳的 zip 由 `node tools/pack-extension.mjs` 產出、檔名含 0.5.11 | 維護者 | `docs/DECISIONS.md:7`、`REVIEW.md` 結論第二段、`CHANGELOG.md:19` |
+| 把各文件的商店狀態改成「公開 v0.5.11」 | Chrome Web Store 通過 v0.5.11（2026-10-29 送審） | 商店公開頁版本為 0.5.11；`REVIEW.md`、`docs/STORE_LISTING.md`、`docs/STORE.md`、本檔現況段同一個 commit 改掉「審核中」 | Claude Haiku | `docs/DECISIONS.md` 2026-10-29 條、`REVIEW.md` 結論 |
 | 更新 `content.js` 的 ChatGPT 輸入框選擇器與貼上策略 | 實機出現「無輸入框」「寫入逾時」「寫入失敗」，或 ChatGPT 再改變長文 paste 的處理方式 | 在側邊欄 iframe DevTools 找到實際節點並補進 `docs/DEVELOPMENT.md` 選擇器表；`tools/tests/content.test.mjs` 先有重現紅燈再轉綠；實機長提示詞寫入成功 | Claude Opus | `docs/DEVELOPMENT.md:114,120-133`、`REVIEW.md` 本機實測表「未來 DOM 改版」列、`2393b86` |
 | 驗證 Cloudflare 擋下（HTTP 403）時的「需驗證」狀態列流程 | 維護者實機遇到 Cloudflare 驗證頁 | 側邊欄顯示「需驗證」，在一般分頁完成驗證後重試可恢復；結果寫回 `docs/DEVELOPMENT.md` 該段，並刪掉「無法穩定重現」註記 | 維護者 | `docs/DEVELOPMENT.md:99`、`REVIEW.md` 本機實測表 |
-| 自訂或更多動作按鈕 | 維護者明確要求這個產品方向（`AGENTS.md` 不把它列入需決策清單，但屬於產品範圍擴張） | 設定頁可新增動作並存進 sync 儲存；單項超過 8 KB 時顯示錯誤（沿用 `1873aa4` 行為）；對應單元測試綠 | Claude Sonnet | `AGENTS.md:7-9`、`CHANGELOG.md` Unreleased 段儲存失敗一條 |
+| 自訂或更多動作按鈕 | 維護者明確要求這個產品方向（`AGENTS.md` 不把它列入需決策清單，但屬於產品範圍擴張） | 設定頁可新增動作並存進 sync 儲存；單項超過 8 KB 時顯示錯誤（沿用 `1873aa4` 行為）；對應單元測試綠 | Claude Sonnet | `AGENTS.md:7-9`、`CHANGELOG.md` v0.5.11 段儲存失敗一條 |
 
 ## 刻意不做
 

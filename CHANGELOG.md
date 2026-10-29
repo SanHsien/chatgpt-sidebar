@@ -17,7 +17,7 @@
 - **文案**：寫入逾時的說明條不再說「已縮短附文長度」。v0.5.10 已改回盡量全文；逾時時請再試或按「檢查」重載聊天畫面。
 - **安全性**：`panel.js` 的兩個 `postMessage` 監聽（ping／插入結果回報）補上來源比對。原本只驗 `data.source`、`action` 與 `requestId`，沒有比對 `event.source`；現在只認送出請求的那個 iframe。`content.js` 的 ping／寫入監聽同樣只認 `window.parent`。由 CodeQL `js/missing-origin-check` 指出。
 - **修復**：ChatGPT 頁面忙時 ping 常慢過 500ms、寫入照樣成功；這則提示改用 `console.info`，不再被 `chrome://extensions` 列成「錯誤」。
-- **商店**：v0.5.10 已在 Chrome Web Store 公開，公開頁見 [`docs/STORE.md`](docs/STORE.md)。v0.5.11 隨本版上傳送審。
+- **商店**：v0.5.10 已在 Chrome Web Store 公開，公開頁見 [`docs/STORE.md`](docs/STORE.md)。v0.5.11 已於 2026-10-29 上傳送審。
 
 ## v0.5.10
 

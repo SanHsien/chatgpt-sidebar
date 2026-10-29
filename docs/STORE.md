@@ -4,7 +4,7 @@
 
 ## 目前發行與上架策略
 
-- **商店（已通過）**：https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd （套件 v0.5.10）
+- **商店（已通過）**：https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd （公開套件 v0.5.10；v0.5.11 於 2026-10-29 送審、審核中）
 - **並行**：GitHub Release／Load unpacked（zip 與 checksum）
 - **操作手冊與可貼文案**：[`STORE_LISTING.md`](STORE_LISTING.md)
 - **隱私政策（上架 URL）**：https://sanhsien.github.io/chatgpt-sidebar/privacy.html （原文 [`PRIVACY_POLICY.md`](PRIVACY_POLICY.md)）

@@ -4,13 +4,13 @@
 
 - 理由：維護者實機發現 v0.5.10 會「顯示已寫入、輸入框卻是空的」（ChatGPT 把長的純文字 paste 轉成附件），商店版同樣受影響。修正（HTML paste＋讀回驗證）與先前累積的 postMessage 來源比對、DNR 錨定一起發布；取代下方 2026-08-27「未決定修補前不出新版」。
 - 維護者實機確認：摘要寫入成功、提示詞完整進側邊欄輸入框。
-- 發行：GitHub Release v0.5.11（zip＋sha256）；商店上傳由維護者登入 Developer Dashboard 進行。
+- 發行：GitHub Release v0.5.11（zip＋sha256）；維護者於同日在 Developer Dashboard 上傳 `chatgpt-sidebar-0.5.11-store.zip`（manifest 在 zip 根目錄）並提交審查。
 
 ## 2026-08-27：商店已通過；未決定修補前不出新版
 
 - Chrome Web Store 已通過並公開（套件 v0.5.10）：https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd
 - 商品詳細說明仍是舊文案；有空再改 Dashboard 即可，不必上傳新 zip、不急。
-- `main` 上未發行的 postMessage 來源比對與逾時文案，等維護者決定要發布修補時再 bump `manifest.json`、打 GitHub Release、上傳商店。
+- `main` 上未發行的 postMessage 來源比對與逾時文案，等維護者決定要發布修補時再 bump `manifest.json`、打 GitHub Release、上傳商店。（已由 2026-10-29 v0.5.11 發行取代）
 - 2026-07-31「不上架」已被 2026-07-31 挑戰上架與本次通過結果取代；GitHub Release 仍並行保留。
 
 ## 2026-08-14：再次確認直接推 main
