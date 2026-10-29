@@ -1,7 +1,7 @@
 # Chrome Web Store 上架包
 
-更新日期：2026-10-29
-狀態：**已通過並公開**（商店公開 v0.5.10；v0.5.11 已發 GitHub Release，2026-10-29 已上傳商店送審、審核中）
+更新日期：2026-10-30
+狀態：**已通過並公開**（商店公開 v0.5.11，與 GitHub Release 一致）
 
 公開頁：https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd
 項目 ID：`kilnbieekgofpkgbhohmogcjkebfflkd`
