@@ -1,7 +1,7 @@
 # 路線圖
 
 > 本 repo 後續工作的單一真相源。做完一項，就在同一個 commit 刪掉那一列；新工作只加在這裡。
-> 現況段的數字是 2026-10-29 依 `main` `6e25686a36f1` 查的快照，開工前先重查 GitHub。
+> 現況段的數字是 2026-11-08 依 `main` `d91332a` 查的快照，開工前先重查 GitHub。
 
 ## 現況
 
@@ -11,14 +11,13 @@ v0.5.11 已於 2026-10-29 發 GitHub Release（`6e25686a36f1`），同日上傳 
 
 ## 近期：可以直接動手
 
-| 項目 | 為什麼 | 驗收方式 | 建議執行者 | 證據 |
-| --- | --- | --- | --- | --- |
-| 在 Chrome Developer Dashboard 把商品「詳細說明」換成 `docs/STORE_LISTING.md` 的新文案 | 商店頁仍只提「摘要當前頁面」，與現有四個動作不符；不需新 zip、不需 bump 版本 | 商店公開頁的詳細說明出現摘要／翻譯／解釋／大綱四項；`docs/STORE_LISTING.md` 的「狀態」行同一個 commit 更新 | 維護者 | `docs/STORE_LISTING.md:13-18`、`docs/STORE.md:12`、`docs/DECISIONS.md:6` |
+目前沒有 agent 能在本機直接完成的項目。商店詳細說明更新需要登入 Chrome Developer Dashboard，已改寫成中期的觸發列。
 
 ## 中期：等條件成立再做
 
 | 項目 | 觸發條件 | 驗收方式 | 建議執行者 | 證據 |
 | --- | --- | --- | --- | --- |
+| 在 Chrome Developer Dashboard 把商品「詳細說明」換成 `docs/STORE_LISTING.md` 的新文案 | 維護者下次登入 Developer Dashboard（需要人登入 Google 帳號，agent 無法代做）；2026-11-08 抓公開頁：開頭摘要句已含四項；其後的繁中詳細說明仍是只提『摘要當前頁面』的舊文案 | 商店公開頁的詳細說明出現摘要／翻譯／解釋／大綱四項（重抓 `https://chromewebstore.google.com/detail/chatgpt-sidebar-embedded/kilnbieekgofpkgbhohmogcjkebfflkd?hl=en` 核對）；`docs/STORE_LISTING.md` 的「狀態」行同一個 commit 更新；不需新 zip、不 bump 版本 | 維護者 | `docs/STORE_LISTING.md:13-18`、`docs/STORE.md:12`、`docs/DECISIONS.md:6` |
 | 更新 `content.js` 的 ChatGPT 輸入框選擇器與貼上策略 | 實機出現「無輸入框」「寫入逾時」「寫入失敗」，或 ChatGPT 再改變長文 paste 的處理方式 | 在側邊欄 iframe DevTools 找到實際節點並補進 `docs/DEVELOPMENT.md` 選擇器表；`tools/tests/content.test.mjs` 先有重現紅燈再轉綠；實機長提示詞寫入成功 | Claude Opus | `docs/DEVELOPMENT.md:114,120-133`、`REVIEW.md` 本機實測表「未來 DOM 改版」列、`2393b86` |
 | 驗證 Cloudflare 擋下（HTTP 403）時的「需驗證」狀態列流程 | 維護者實機遇到 Cloudflare 驗證頁 | 側邊欄顯示「需驗證」，在一般分頁完成驗證後重試可恢復；結果寫回 `docs/DEVELOPMENT.md` 該段，並刪掉「無法穩定重現」註記 | 維護者 | `docs/DEVELOPMENT.md:99`、`REVIEW.md` 本機實測表 |
 | 自訂或更多動作按鈕 | 維護者明確要求這個產品方向（`AGENTS.md` 不把它列入需決策清單，但屬於產品範圍擴張） | 設定頁可新增動作並存進 sync 儲存；單項超過 8 KB 時顯示錯誤（沿用 `1873aa4` 行為）；對應單元測試綠 | Claude Sonnet | `AGENTS.md:7-9`、`CHANGELOG.md` v0.5.11 段儲存失敗一條 |
